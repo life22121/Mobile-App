@@ -1,0 +1,198 @@
+<!doctype html>  
+<!--[if IE 6 ]><html lang="en-us" class="ie6"> <![endif]-->
+<!--[if IE 7 ]><html lang="en-us" class="ie7"> <![endif]-->
+<!--[if IE 8 ]><html lang="en-us" class="ie8"> <![endif]-->
+<!--[if (gt IE 7)|!(IE)]><!-->
+<html lang="en-us"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	
+	<title>payMoney Mobile App</title>
+	
+	<meta name="description" content="">
+	<meta name="author" content="Techvillage">
+	<meta name="copyright" content="Techvillage">
+	<meta name="generator" content="Documenter v2.0 http://rxa.li/documenter">
+	<meta name="date" content="2018-01-09T00:00:00+01:00">
+	
+	<link rel="stylesheet" href="assets/css/documenter_style.css" media="all">
+	
+	<link rel="stylesheet" href="assets/css/custom.css" media="screen">
+
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
+	<script src="assets/js/jquery.js"></script>
+	<script src="assets/js/cufon.js"></script><script src="assets/js/font.js"></script><script>Cufon.replace("h1, h2, h3, h4, h5, h6");</script>
+	<script src="assets/js/jquery.scrollTo.js"></script>
+	<script src="assets/js/jquery.easing.js"></script>
+	
+	<script>document.createElement('section');var duration='450',easing='easeOutExpo';</script>
+	<script src="assets/js/script.js"></script>
+	
+	<style>
+		html{background-color:#F3F3F3;color:#585858;}
+		::-moz-selection{background:#111111;color:#F1F1F1;}
+		::selection{background:#111111;color:#F1F1F1;}
+		#documenter_sidebar #documenter_logo{background-image:url(assets/images/image_1.png);}
+		a{color:#111111;}
+		.btn {
+			border-radius:3px;
+		}
+		.btn-primary {
+			  background-image: -moz-linear-gradient(top, #585858, #3B3B3B);
+			  background-image: -ms-linear-gradient(top, #585858, #3B3B3B);
+			  background-image: -webkit-gradient(linear, 0 0, 0 585858%, from(#333333), to(#3B3B3B));
+			  background-image: -webkit-linear-gradient(top, #585858, #3B3B3B);
+			  background-image: -o-linear-gradient(top, #585858, #3B3B3B);
+			  background-image: linear-gradient(top, #585858, #3B3B3B);
+			  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#585858', endColorstr='#3B3B3B', GradientType=0);
+			  border-color: #3B3B3B #3B3B3B #bfbfbf;
+			  color:#F9F9F9;
+		}
+		.btn-primary:hover,
+		.btn-primary:active,
+		.btn-primary.active,
+		.btn-primary.disabled,
+		.btn-primary[disabled] {
+		  border-color: #585858 #585858 #bfbfbf;
+		  background-color: #3B3B3B;
+		}
+		hr{border-top:1px solid #E5E5E5;border-bottom:1px solid #F9F9F9;}
+		#documenter_sidebar, #documenter_sidebar ul a{background-color:#333333;color:#F1F1F1;http://static.revaxarts-themes.com/noise.gif}
+		#documenter_sidebar ul a{-webkit-text-shadow:1px 1px 0px #444444;-moz-text-shadow:1px 1px 0px #444444;text-shadow:1px 1px 0px #444444;}
+		#documenter_sidebar ul{border-top:1px solid #222222;}
+		#documenter_sidebar ul a{border-top:1px solid #444444;border-bottom:1px solid #222222;color:#F1F1F1;}
+		#documenter_sidebar ul a:hover{background:#111111;color:#F1F1F1;border-top:1px solid #111111;}
+		#documenter_sidebar ul a.current{background:#111111;color:#F1F1F1;border-top:1px solid #111111;}
+		#documenter_copyright{display:block !important;visibility:visible !important;}
+	</style>
+	
+</head>
+<body class="documenter-project-paymoney-app">
+	<div id="documenter_sidebar">
+		<a href="#documenter_cover" id="documenter_logo"></a>
+		<ul id="documenter_nav">
+			<li><a class="current" href="#documenter_cover">Start</a></li>
+				
+			<li><a href="#deploying_process" title="Deploying Process">How to generate 'apk' file.</a></li>
+			<li><a href="#upload_playstore" title="Upload playstore">Upload App to Playstore</a></li>
+
+		</ul>
+		<div id="documenter_copyright">Copyright Techvillage 2021<br>
+		made with the <a href="http://rxa.li/documenter" style="color: white;">Documenter v1.9</a> 
+		</div>
+	</div>
+	<div id="documenter_content">
+	<section id="documenter_cover">
+	<h1>PayMoney Mobile App</h1>
+	
+	<div id="documenter_buttons">
+		
+	</div>
+	<hr>
+	<ul>
+	<li>created: 15th September 2018</li>
+	<li>Latest update: 3rd January 2021</li>
+	<li>by: Techvillage</li>
+	<li><a href="http://paymoney.techvill.net/">www.paymoney.techvill.org</a></li>
+	<li>email: <a href="">support@techvill.org</a></li>
+	</ul>
+	<p></p>
+	</section>
+	
+	<section id="deploying_process">
+	<div class="page-header"><h3>Android App Deploying Process.</h3><hr class="notop"></div>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+<p>Follow those processes to generate "apk" file.</p>
+	1. At first extract your <strong>paymoney.zip </strong>file.</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	2. Open <strong>config.xml</strong> file to your text editor (Notepad, Sublime Text, Atom, Vs Code e.t.c).</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+<ul>
+	<li>Search  <strong>widget </strong> xml markup tag and change the id by your app id like <strong>id=”com.hostName.appName”</strong> and version by your app version like <strong>version=”1.0.1”.</strong></li>
+    <li>Search  <strong>name </strong> xml tag and replace the text by your <strong>appName </strong>  like <strong> appName</strong> goes here.</li>
+    <li>Search <strong>description </strong>xml tag and replace the text by your <strong>appDescription</strong> like <strong>appDescription</strong> goes here.</strong></li>
+	<li>Search <strong>author</strong> xml tag and replace the text by your <strong>authorDetails</strong> </li>
+	
+</ul>
+<p><img alt="" src="assets/images/img_0.png"></p>
+
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	3.If you want, you can change your app <strong>site_url.</strong>
+<ul>
+	<li>Go to  <strong>projectName\www\js\app.js.</strong></li>
+    <li>Open app.js file.</li>
+    <li>Change the <strong>site_url</strong> from the source code like below screenshot with your details.</li>
+</ul>
+	<p><img alt="" src="assets/images/img_1.png"></p>
+
+</p>
+
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	4.To custom your app icon which you want to launch into your device please create an icon with <strong>1024*1024</strong> size and convert it from following website.
+	<ul>
+	<li>Go to <a href="https://pgicons.abiro.com/ "><strong>https://pgicons.abiro.com/</strong> </a></li>
+	<li>Upload your resize image & download the file.</li>
+	<li>Extract the downloaded zip file.</li>
+	<li>Copy only the "res" folder from extracted folder.</li>
+	<li>Delete the res folder from your project root and keep the new res folder with your custom app like below screenshot.</li>
+	</ul>
+		<p><img alt="" src="assets/images/img_2.png"></p>
+	</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-size=16px;font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	5. Now build your "apk"
+	<ul>
+	<li>To build your apk follow this docs <a href="https://docs.paymoney.techvill.net/generation-of-signed-bundle-with-android-studio/"><strong>https://docs.paymoney.techvill.net/generation-of-signed-bundle-with-android-studio/</strong> </a> </li>
+	
+	
+</p>
+</section>
+<section id="upload_playstore">
+	<div class="page-header"><h3>Upload App to Playstore</h3><hr class="notop"></div>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	&nbsp; 1. Go to this link <a href="https://www.java.com/en/download/ "><strong>https://www.java.com/en/download/ </strong></a> to Download and install Java.</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	2. Go to this link<a href=" https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/index.html"> <strong>https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/index.html</strong></a>  to Set Java Home directory.</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	3. Open the command prompt (cmd.exe) from start button as an Administrator, then Run the following command: keytool -genkey -v -keystore [keystore_name].keystore -alias [alias_name]   -keyalg RSA -keysize 2048 -validity 10000
+	Here—
+	<ul>
+		<li>Replace [keystore_name] is with your keystore name like testApp</li>
+		<li>Replace [alias_name] is with your alias keystore name like testAppAlias.Then the command will be look like this-keytool -genkey -v -keystore testApp.keystore -alias testAppAlias   -keyalg RSA -keysize 2048 -validity 10000</li>
+	</ul>
+	<p><img alt="" src="assets/images/img_9.png"></p>
+</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+4. Keytool will ask for keystore password. Enter password and confirm password like below screenshot: 
+  <p><img alt="" src="assets/images/img_10.png"></p>
+</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	5. Next, keytool will ask for additional information. Supply appropriately like below screenshot:
+	<p><img alt="" src="assets/images/img_11.png"></p>	
+</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	6. Next, keytool will ask password for Alias. Return if it's the same as keystore password. Otherwise enter password and confirm password like below screenshot:
+	<p><img alt="" src="assets/images/img_12.png"></p>
+</p>
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	7. Your signing key is now ready to submit like below screenshot:
+	<p><img alt="" src="assets/images/img_13.png"></p>
+</p>
+
+<p style="margin: 18px 0px; padding: 0px; border: 0px; outline: 0px; font-size=16px;font-family: Arial, verdana, arial, sans-serif; vertical-align: baseline; line-height: 1.5em; color: rgb(56, 56, 56); background-color: rgb(238, 238, 238);">
+	8. Again follow the docs to build your signed "apk"
+	<ul>
+	<li>To build signed apk follow this docs <a href="https://docs.paymoney.techvill.net/generation-of-signed-bundle-with-android-studio/"><strong>https://docs.paymoney.techvill.net/generation-of-signed-bundle-with-android-studio/</strong> </a> </li>
+	
+	
+</p>
+
+
+<div>
+	&nbsp;</div>
+
+</section>
+
+	</div>
+</body>
+</html>

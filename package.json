@@ -1,0 +1,25 @@
+{
+  "name": "com.phonegap.paymoney",
+  "version": "1.0.0",
+  "displayName": "PayMoney",
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-network-information": {},
+      "phonegap-plugin-barcodescanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
+    }
+  },
+  "dependencies": {
+    "cordova-android": "^8.1.0",
+    "cordova-plugin-network-information": "^2.0.1",
+    "cordova-plugin-whitelist": "1.1.0"
+  },
+  "devDependencies": {
+    "phonegap-plugin-barcodescanner": "^8.1.0"
+  }
+}
