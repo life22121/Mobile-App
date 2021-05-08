@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+      <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+      <!--Css style starts here-->
+      <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+      <link type="text/css" rel="stylesheet" href="style.css" />
+      <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+      <style type="text/css">
+          #keyboard {
+          width:132%;
+          margin:0 auto;
+          }
+          ol.keys {
+            list-style-type:none;
+          }
+          ol.keys li {
+            width:25%;
+            display:block;
+            text-align:center;
+            height:2em;
+            float:left;
+            font-size:1.3em;
+            font-family:sans-serif;
+            padding-top:.7em;
+            border:.5px solid rgb(100,100,100);
+            color:white;
+            background-color:#232b47;
+          }
+
+          ol.keys li:hover {
+            cursor:pointer;
+          }
+          ol.keys li:active {
+            background-color:#232b47;
+            color:#000;
+          }
+
+          .ui-page-theme-b .ui-btn {
+              background-color: #fff !important;
+              border-color: transparent !important;
+              color: #000 !important;
+              text-shadow: none;
+              font-size: 20px;
+              padding: 5px;
+              border-radius: 0px;
+          }
+      </style>
+      <!--Css style ends here-->
+
+      <!--Javascript Library Starts here-->
+      <script type="text/javascript" src="js/jquery.min.js"></script>
+      <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+      <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+      <script type="text/javascript" src="js/pullToRefresh.js"></script>
+      <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+      <script type="text/javascript" src="js/common/translate.js"></script>
+      <script type="text/javascript" src="js/common/language.js"></script>
+      <script type="text/javascript" src="js/common/app.js"></script>
+      <script defer type="text/javascript" src="js/common/check-token.js"></script>
+      <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+      <script defer type="text/javascript" src="js/common/restrict-to-decimal-pref.js"></script>
+      <script defer type="text/javascript" src="js/modules/accept-request-money.js"></script>
+      <!--Javascript Library Ends here-->
+  </head>
+
+  <body>
+      <div class="loader" style="display: none;"></div>
+      <div data-role="page" id="features" class="secondarypage" data-theme="b">
+          <header>
+              <div data-role="header" data-position="fixed">
+                  <div class="nav_left_button">
+                      <a href="#" onclick="window.history.back();">
+                          <img src="images/icons/left-arrow.png" alt="" title="" />
+                      </a>
+                  </div>
+                  <div class="nav_center_logo">
+                      <div class="p-title">
+                          <h2 style="font-size:13px" data-localize="transactionDetailsAcceptRequestTitleText"></h2>
+                      </div>
+                  </div>
+                  <div class="nav_right_button">
+                      <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                  </div>
+                  <div class="clear"></div>
+              </div>
+
+              <!-- Internet Connection Message Div -->
+                <div align="center" class="no_internet_div" id="NoInternetDiv" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span>
+                    </span>
+                </div>
+          </header>
+          <!-- /header -->
+          <div role="main" class="ui-content animate-bottom myDiv" style="display: block;">
+              <div class="pages_maincontent">
+                  <div class="page_content">
+                      <section class="margin-50" style="margin-top: 40px;">
+                              <div class="Divs">
+                                  <p class="requestMoney" style="color: green;text-align: center;font-size: 14px;font-weight: bold;margin-bottom: 40px;"></p>
+                              </div>
+                              <div class="loginform">
+                                    <div class="errorDiv" style="display: none;">
+                                          <div class="alert alert-danger">
+                                            <p style="text-align: center;" class="showError"></p>
+                                          </div>
+                                    </div>
+
+                                  <form id="LoginForm" class="moneyForm" method="post">
+                                      <input type="hidden" name="email" id="hiddenEmail">
+                                      <input type="hidden" name="currency_id" id="currency_id">
+                                      <input type="text" readonly id="display" name="amount" value="" class="form_input require" placeholder="0.00" data-role="none" />
+                                      <input type="text" readonly id="currency" name="currency" value="" class="form_input require" data-role="none" />
+                                      <div id="keyboard">
+                                        <ol class="keys">
+                                           <li data-number='1'>1</li>
+                                           <li data-number='2'>2</li>
+                                           <li data-number='3'>3</li>
+                                           <li data-number='4'>4</li>
+                                           <li data-number='5'>5</li>
+                                           <li data-number='6'>6</li>
+                                           <li data-number='7'>7</li>
+                                           <li data-number='8'>8</li>
+                                           <li data-number='9'>9</li>
+                                           <li data-number='0'>0</li>
+                                          <li data-number='.'>.</li>
+                                          <li id="delete">X</li>
+                                        </ol>
+                                      </div>
+
+                                      <button type="submit" name="submit" action="request-payment-review" class="form_submit requestPaymentReview customBorderRadius" data-redirect="request-payment-review.html" id="submit" data-role="none"><span data-localize="sendMoneyNextBtnText"></span>
+                                      </button>
+                                  </form>
+                              </div>
+                      </section>
+                  </div>
+              </div>
+          </div>
+          <!-- /content -->
+          <aside>
+              <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                  <div class="user_login_info">
+                      <div class="user_thumb_container">
+                          <div class="user_thumb">
+                              <img class="image_src" src="images/author.png" alt="" title="" />
+                          </div>
+                      </div>
+                      <div class="user_details">
+                          <p class="username" style="color: #fff;"></p>
+                      </div>
+                      <nav class="user-nav" id="menuItem">
+                          <!--Load a dynamice html content for menu-->
+                      </nav>
+                  </div>
+                  <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+              </div>
+          </aside>
+          <!-- /panel -->
+      </div>
+      <!-- /page -->
+
+      <!--Javascript-->
+      <script type="text/javascript">
+
+        //set amount, currency code and currency id on load
+        $(window).on('load', function()
+        {
+            if(networkState()=='none')
+            {
+                onOffline();
+                $(window).scrollTop(0);
+            }
+            else
+            {
+                onOnline();
+                //
+                let requestAcceptAmount = localStorage.getItem('request-accept-amount');
+                let requestAcceptCurrencyCOde = localStorage.getItem('request-accept-currency-code');
+                let requestAcceptcurrencyId = localStorage.getItem('request-accept-currency-id');
+                if (requestAcceptAmount != null && requestAcceptCurrencyCOde != null && requestAcceptcurrencyId != null) {
+                  $('#display').val(requestAcceptAmount);
+                  $('#currency').val(requestAcceptCurrencyCOde);
+                  $('#currency_id').val(requestAcceptcurrencyId);
+                }
+
+                //Restrit Amount Decimal Places
+                $("#display").val(function()
+                {
+                    let num = $('.keys').data('number');
+                    if (this.value != '') {
+                        return restrictNumberToPrefdecimalPlaces((this.value + num));
+                    }
+                });
+            }
+        });
+
+        //set amount, currency code and currency id on load
+        // var requestPaymentConfirm =
+        // {
+        //     initialize: function()
+        //     {
+        //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+        //     },
+        //     onDeviceReady: function()
+        //     {
+        //         this.receivedEvent('deviceready');
+        //     },
+        //     receivedEvent: function()
+        //     {}
+        // };
+        // requestPaymentConfirm.initialize();
+
+        // Login form validation
+        $('.moneyForm').validate(
+        {
+            rules:
+            {
+                amount:
+                {
+                    required: true
+                }
+            }
+        });
+
+        $('.keys').on('click', 'li', function()
+        {
+            var num = $(this).data('number')
+            $("#display").val(function()
+            {
+                //Restrit Amount Decimal Places
+                return restrictNumberToPrefdecimalPlaces((this.value + num));
+            });
+        });
+
+        $('#delete').click(function()
+        {
+            var text = $('#display').val();
+            var backSpace = text.substr(0, text.length - 1);
+            $('#display').val(backSpace);
+            return false;
+        });
+
+        //requestPaymentReview
+        $(document).on('click', '.requestPaymentReview', function(e)
+        {
+            e.preventDefault();
+            if(networkState()=='none')
+            {
+                onOffline();
+                $(window).scrollTop(0);
+            }
+            else
+            {
+                onOnline();
+                //
+                requestPaymentReview();
+            }
+        });
+
+      </script>
+  </body>
+</html>

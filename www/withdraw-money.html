@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <link type="text/css" rel="stylesheet" href="css/sweetalert.css" />
+        <style type="text/css">
+            #keyboard {
+            width:132%;
+            margin:0 auto;
+            }
+            ol.keys {
+              list-style-type:none;
+            }
+            ol.keys li {
+              width:25%;
+              display:block;
+              text-align:center;
+              height:2em;
+              float:left;
+              font-size:1.3em;
+              font-family:sans-serif;
+              padding-top:.7em;
+              border:.5px solid rgb(100,100,100);
+              color:white;
+              background-color:#232b47;
+            }
+
+            ol.keys li:hover {
+              cursor:pointer;
+            }
+            ol.keys li:active {
+              background-color:#232b47;
+              color:#000;
+            }
+
+            .ui-page-theme-b .ui-btn {
+                background-color: #fff !important;
+                border-color: transparent !important;
+                color: #000 !important;
+                text-shadow: none;
+                font-size: 20px;
+                padding: 5px;
+                border-radius: 0px;
+            }
+
+            .ui-content{
+                display: none;
+            }
+
+            .loader {
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                z-index: 9999999999;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #232b47;
+                width: 100px;
+                height: 100px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            @-webkit-keyframes spin {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="js/sweetalert.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-next.js"></script>
+        <script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+        <script defer type="text/javascript" src="js/common/restrict-to-decimal-pref.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+        <script defer type="text/javascript" src="js/modules/withdraw-money.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div class="loader" style="display: none"></div>
+        <div data-role="page" id="features" class="secondarypage pageDiv" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button">
+                            <a href="#" onclick="backNavigateTo(event)" data-nav-title="" data-nav-to="">
+                                <img src="images/icons/left-arrow.png" alt="" title="" />
+                            </a>
+                    </div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:16px" data-localize="payoutText"></h2></div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <!-- Internet Connection Message Div -->
+                <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span></span>
+                </div>
+                <!-- Check User Suspended -->
+                <div class="userSuspendedDiv" style="display: none;text-align: center;font-weight: bold;">
+                    <div class="alert alert-danger">
+                        <i class="fa fa-flag"></i> <strong style="font-size: 24px;"><span data-localize="suspendedText"></span></strong>
+                      <hr>
+                      <p class="showUserSuspendedError"></p>
+                    </div>
+                </div>
+            </header>
+            <!-- /header -->
+
+            <div role="main" class="ui-content animate-right-to-center" id="withdrawMoneyBlock" style="display: block;">
+                <div class="pages_maincontent" style="margin-top: -32px">
+                    <div class="page_content">
+                        <section>
+                                <div class="Divs">
+                                    <p class="requestMoney" style="color: green;text-align: center;font-size: 14px;font-weight: bold;margin-bottom: 40px;"></p>
+                                </div>
+                                <div class="loginform">
+
+                                    <!-- Show Error Message -->
+                                    <div class="errorDiv" style="display: none">
+                                        <div class="alert alert-danger">
+                                          <p style="text-align: center;" class="showError"></p>
+                                        </div>
+                                    </div>
+
+                                    <button class="form_submit customBorderRadius" data-role="none" style="margin-bottom: 15px !important;">
+                                        <a href="#" onclick="goToPayoutSetting()" data-localize="withdrawSetting" style="color: #fff;"></a>
+                                    </button>
+
+                                    <form id="withdrawMoneyForm" class="moneyForm" method="post">
+                                        <label data-localize="payoutPaymentMethodText"></label>
+                                        <select name="payoutSetId" id="paymentmethod" required="true">
+                                        </select>
+                                        <span id="paymentValidate" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+                                        <label data-localize="sendMoneyCurrencyText"></label>
+                                        <select name="currency_id" id="withdrawCurrency" required="true">
+                                        </select>
+
+                                        <span id="currencyValidate" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+                                        <label data-localize="sendMoneyAmntText"></label>
+                                        <input type="text" readonly id="sendDisplay" name="amount" value="" class="form_input require" placeholder="0.00" data-role="none" />
+                                        <span id="payoutAmntValidate" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+                                        <div id="keyboard">
+                                          <ol class="keys">
+                                             <li data-number='1'>1</li>
+                                             <li data-number='2'>2</li>
+                                             <li data-number='3'>3</li>
+                                             <li data-number='4'>4</li>
+                                             <li data-number='5'>5</li>
+                                             <li data-number='6'>6</li>
+                                             <li data-number='7'>7</li>
+                                             <li data-number='8'>8</li>
+                                             <li data-number='9'>9</li>
+                                             <li data-number='0'>0</li>
+                                            <li data-number='.'>.</li>
+                                            <li id="delete">X</li>
+                                          </ol>
+                                        </div>
+
+                                        <button data-localize="sendMoneyNextBtnText" type="submit" name="submit" class="form_submit customBorderRadius" id="submit" data-role="none"></button>
+                                    </form>
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <div role="main" class="ui-content animate-right-to-center" id="withdrawReviewSection">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section class="margin-50" style="margin-top: 40px;">
+                            <div style="text-align: center;"><h2 style="font-size: 14px"><span data-localize="payoutConfirmSubHeaderText"></span></h2></div>
+                            <span id="payment_method_logo"></span>
+                            <br>
+                            <br>
+
+                            <div class="loginform bankDetails" style="margin-bottom: 50px">
+                                <h2>
+                                    <span data-localize="payoutConfirmBankAccountHolderName" style="float:left;"></span>&nbsp;:&nbsp;
+                                    <span class="account_name" style="float:right;"></span>
+                                </h2>
+                                <h2>
+                                    <span data-localize="payoutConfirmBankAccountNumber" style="float:left;"></span>&nbsp;:&nbsp;
+                                    <span class="account_number" style="float:right;"></span>
+                                </h2>
+                                <h2>
+                                    <span data-localize="payoutConfirmBankSwiftCode" style="float:left;"></span>&nbsp;:&nbsp;
+                                    <span class="swift_code" style="float:right;"></span>
+                                </h2>
+                                <h2>
+                                    <span data-localize="payoutConfirmBankName" style="float:left;"></span>&nbsp;:&nbsp;
+                                    <span class="bank_name" style="float:right;"></span>
+                                </h2>
+                                <!-- <h2 style="float:left;"><span data-localize="payoutConfirmBankAccountNumber"></span>&nbsp;:&nbsp;</h2><h2 class="account_number" style="float:right;"></h2>
+                                <h2 style="float:left;"><span data-localize="payoutConfirmBankSwiftCode"></span>&nbsp;:&nbsp;</h2><h2 class="swift_code" style="float:right;"></h2>
+                                <h2 style="float:left;"><span data-localize="payoutConfirmBankName"></span>&nbsp;:&nbsp;</h2><h2 class="bank_name" style="float:right;"></h2> -->
+                            </div>
+                            <br>
+
+                            <div class="loginform loginFrom2">
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="payoutConfirmAmount"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dcurrencyAmount" style="float: right;"></span></h2>
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="sendMoneyfeeText"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalFees" style="float: right;"></span></h2>
+                                <hr style="border: 1px solid #ddd">
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="sendMoneytotalAmntText"></span>&nbsp;&nbsp;&nbsp;<span class="totalAmount" style="float: right;"></span></h2>
+
+                                <button  type="submit" name="submit" action="withdraw-money-pay" class="form_submit withdrawMoneyPay customBorderRadius" data-redirect="withdraw-money-success.html" id="submit" data-role="none" style="font-size: 14px">
+                                    <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> <span data-localize="sendMoneyConfirmBtnText" id="payoutConfirmBtnText"></span>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <!--Javascript-->
+        <script type="text/javascript">
+
+            function goToPayoutSetting() {
+                window.location.href = 'withdraw-money-setting.html';
+            }
+            
+            $(window).on('load', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+
+                    if (window.localStorage.getItem('user-status') == 'Suspended')
+                    {
+                        userIsSuspended();
+                        $('.ui-content').hide();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        //Restrit Amount Decimal Places
+                        $("#sendDisplay").val(function()
+                        {
+                            let num = $('.keys').data('number');
+                            if (this.value != '') {
+                                return restrictNumberToPrefdecimalPlaces((this.value + num));
+                            }
+                        });
+
+                        let withdrawalValidationErrorMessage = localStorage.getItem('withdrawalValidationErrorMessage');
+                        if (withdrawalValidationErrorMessage != null) {
+                            showErrorMessage(withdrawalValidationErrorMessage);
+                            window.localStorage.removeItem('withdrawalValidationErrorMessage');
+                        }
+
+                        getWithdrawalPaymentMethods()
+                        .then(paymentMethodId => {
+                            getWithdrawalCurrenciesBasedOnSelectedPaymentMethod(paymentMethodId)
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                            
+                    }
+                }
+            });
+
+            //paymentmethod on change - call currencies
+            $(document).on('change', '#paymentmethod', function()
+            {
+                //Currency
+                $('#withdrawCurrency-button span').text((window.localStorage.getItem('language') == 'fr') ? 'Sélectionnez la devise' : 'Select Currency');
+                $("#withdrawCurrency").prepend(`<option value='' selected='selected'>${(window.localStorage.getItem('language') == 'fr') ? 'Sélectionnez la devise' : 'Select Currency'}</option>`);
+
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    //getWithdrawalCurrenciesBasedOnSelectedPaymentMethod
+                    var paymentMethodId = $('option:selected','#paymentmethod').attr('data-paymentMethodId');
+                    getWithdrawalCurrenciesBasedOnSelectedPaymentMethod(paymentMethodId)
+                }
+            });
+
+            //Type amount using num pad
+            $('.keys').on('click', 'li', function() {
+
+                checkPayoutSettings()
+                .then((result) =>
+                {
+                    if (result == true)
+                    {
+
+                        var num = $(this).data('number')
+                        $("#sendDisplay").val(function() {
+                            //Restrit Amount Decimal Places
+                            return restrictNumberToPrefdecimalPlaces((this.value + num));
+                        });
+                        $('#sendDisplay').valid();
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+            });
+
+            //Delete number when press cross button
+            $('#delete').click(function()
+            {
+                var text      = $('#sendDisplay').val();
+                var backSpace = text.substr(0, text.length-1);
+                $('#sendDisplay').val(backSpace);
+                $('#sendDisplay').valid();
+                return false;
+            });
+
+            //withdrawMoneyForm Submit and Validate
+            $('#withdrawMoneyForm').validate({
+                rules: {
+                    payoutSetId: {
+                        required: true,
+                    },
+                    currency_id:{
+                        required: true,
+                    },
+                    amount:{
+                        required:true,
+                        number: true,
+                    },
+                },
+                errorPlacement: function (error, element)
+                {
+                    if (element.attr('name') === 'payoutSetId')
+                    {
+                        error.appendTo('#paymentValidate');
+                    }
+                    else if (element.attr('name') === 'currency_id')
+                    {
+                        error.appendTo('#currencyValidate');
+                    }
+                    else
+                    {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form,e)
+                {
+                    e.preventDefault();
+                    if (networkState() == 'none')
+                    {
+                        onOffline();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        onOnline();
+                        let paymentMethodId = $('option:selected','#paymentmethod').attr('data-paymentMethodId');
+                        let data     =  $('form').serialize();
+                        withdrawMoneyReview(paymentMethodId, data);
+                    }
+                }
+            });
+
+            $(document).on('click', '.withdrawMoneyPay', function(e)
+            {
+                e.preventDefault();
+                //disable submit button
+                let payoutShowLoadingText = (window.localStorage.getItem('language') == 'fr') ? 'Confirmation...' : 'Confirming...';
+                showSpinnerWithButtonDisabled(".withdrawMoneyPay", "#payoutConfirmBtnText", payoutShowLoadingText);
+
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    let paymentMethodId = $('option:selected','#paymentmethod').attr('data-paymentMethodId');
+                    let data     =  $('form').serialize();
+                    withdrawMoneyPay();
+                }
+            });
+        </script>
+    </body>
+</html>

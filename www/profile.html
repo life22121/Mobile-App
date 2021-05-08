@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css Starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <style type="text/css">
+            .loader {
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                z-index: 9999999999;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #232b47;
+                width: 100px;
+                height: 100px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            @-webkit-keyframes spin {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <!--Css Ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/modules/profile.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div class="loader" style="display: none;"></div>
+        <div data-role="page" id="firstNavigationBlock" class="secondarypage" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button">
+                        <a href="#">
+                            <img style="display: none" src="images/icons/left-arrow.png" alt="" title="" />
+                        </a>
+                    </div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:16px" data-localize="profileHeaderText" id="profile-header-text"></h2>
+                        </div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel">
+                            <img src="images/icons/icons8-align-justify-80.png" alt="" title="" />
+                        </a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+             <!-- Internet Connection Message Div -->
+                <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span></span>
+                </div>
+            </header>
+            <!-- /header -->
+            <div role="main" class="ui-content" id="ptr">
+                <div class="loading">
+                    <div class="addLoader">
+                    </div>
+                </div>
+                <div class="pages_maincontent">
+                    <div class="page_content animate-right-to-center profileDiv" style="display:none;">
+                        <section>
+                            <div class="dboard-profile">
+                                <div class="pro-left"><a href="#" class="editProfile" data-transition="slidefade"><img style="border-radius: 50%;width: 60px !important;height: 58px !important" class="image_src" src="images/author.png" alt="" title="" /></a> </div>
+                                <div class="pro-right">
+                                    <h2 style="font-size: 16px" class="username"></h2>
+                                    <h4 style="font-size: 14px" class="userEmail"></h4>
+                                    <h4 style="font-size: 14px" class="userPhone"></h4>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <ul class="features_list_detailed_available_balance" style="margin-top: -15px;">
+                                <a href="#" data-transition="slidefade" data-rel="" data-redirect="available-balance.html" class="all_available_balance">
+                                    <li>
+                                        <div class="feat_small_details">
+                                            <h4 style="font-size: 16px" data-localize="profileAvbBalance"></h4>
+                                        </div>
+                                        <div class="view_more view_more_avb"><p class="av_blance" style="font-size: 16px"></p><img src="images/icons/right-arrow-white.png" alt="" title="" /></div>
+                                    </li>
+                                </a>
+                            </ul>
+                            <!--</div>-->
+                        </section>
+                        <div id="add_div"></div>
+                        <section>
+                            <ul class="features_list_detailed">
+                                <a href="#" data-transition="slidefade" class="all_activity" data-redirect="transaction.html" action="activityall">
+                                    <li>
+                                        <div class="feat_small_details">
+                                            <h4 style="font-size: 16px;margin-top: 5px;" data-localize="userActivityText"></h4>
+                                        </div>
+                                        <div class="view_more"><img src="images/icons/right-arrow.png" alt="" title="" /></div>
+
+                                    </li>
+                                </a>
+                            </ul>
+                        </section>
+                        <section>
+                            <div class="home-btn">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="depositMoney" data-transition="slidefade">
+                                            <div class="home-icon"><img src="images/icons/deposit.png" alt="" title="" /></div>
+                                            <h4 style="font-size: 14px;color: #232323" data-localize="depositText"></h4>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="withdrawMoney" data-transition="slidefade">
+                                            <div class="home-icon"><img src="images/icons/payout.png" alt="" title="" /></div>
+                                            <h4 style="font-size: 14px;color: #232323" data-localize="payoutText"></h4>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="sendMoneyProfile">
+                                            <div class="home-icon"><img src="images/icons/send-money.png" alt="" title="" /></div>
+                                            <h4 style="font-size: 14px;color: #232323" data-localize="sendMoneyText"></h4>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="requestMoneyProfile">
+                                            <div class="home-icon"><img src="images/icons/request-money.png" alt="" title="" /></div>
+                                            <h4 style="font-size: 14px;color: #232323" data-localize="requestMoneyText"></h4>
+                                        </a>
+                                    </li>
+                                    <li class="dashboard-exchange-money-div">
+                                        <a href="#" class="exchangeMoney" data-transition="slidefade">
+                                            <div class="home-icon"><img src="images/icons/m-exchange.png" alt="" title="" /></div>
+                                            <h4 style="font-size: 14px;color: #232323" data-localize="exchangeText"></h4>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="#" class="crypto-wallets" data-transition="slidefade">
+                                            <div class="home-icon"><img src="images/icons/m-crypto.png" alt="" title="" /></div>
+                                            <h4 style="font-size: 14px;color: #232323" data-localize="cryptoText"></h4>
+                                        </a>
+                                    </li> -->
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+
+        <script type="text/javascript">
+
+            $(window).on('load', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    $(".userEmail").text(window.localStorage.getItem('email'));
+                    if (window.localStorage.getItem('formattedPhone') != null)
+                    {
+                        $(".userPhone").text(window.localStorage.getItem('formattedPhone'));
+                    }
+                    else
+                    {
+                        $(".userPhone").text('');
+                    }
+
+                    // Get user default wallet balance
+                    getUserDefaultWalletUpdatedBalance();
+
+                    // Get enabled currencies preference
+                    getEnabledCurrenciesPreference();
+                }
+            });
+
+            // var profile =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // profile.initialize();
+
+            $(document).on('click', '.all_available_balance', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                    window.location.replace("available-balance.html");
+                }
+                else
+                {
+                    onOnline();
+                    let redirect = $('.all_available_balance').attr('data-redirect');
+                    window.location.href = redirect;
+                }
+            });
+
+            $(document).on('click', '.all_activity', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                    window.location.replace('profile.html');
+                }
+                else
+                {
+                    onOnline();
+                    let redirect = $('.all_activity').attr('data-redirect');
+                    window.location.href = redirect;
+                }
+            });
+
+        </script>
+    </body>
+</html>

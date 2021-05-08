@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link type="text/css" rel="stylesheet" href="plugins/intl-tel-input-13.0.0/build/css/intlTelInput.css" />
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <style type="text/css">
+            .ui-page-theme-b .ui-btn {
+                background-color: #fff !important;
+                border-color: transparent !important;
+                color: #000 !important;
+                text-shadow: none;
+                font-size: 20px;
+                padding: 5px;
+                border-radius: 0px;
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="plugins/intl-tel-input-13.0.0/build/js/intlTelInput.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/hide-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/modules/registration.js"></script>
+        <!--Javascript Library Ends here-->
+
+    </head>
+
+    <body>
+        <div data-role="page" id="login" class="secondarypage" data-theme="b">
+            <div role="main" class="ui-content animate-bottom">
+                <div class="pages_maincontent">
+                    <!-- <div class="form_logo" data-localize="signupHeadingText">REGISTRATION</div> -->
+                    <div class="form_logo" data-localize="signupHeadingText"></div>
+                    <div class="page_content">
+                        <section class="margin-50" style="margin-top: 10px;">
+                                <div class="loginform">
+
+                                    <div class="successDiv" style="display: none;">
+                                        <div class="alert alert-success">
+                                          <p class="showSuccess"></p>
+                                        </div>
+                                    </div>
+                                    <div class="errorDiv" style="display: none;">
+                                        <div class="alert alert-danger">
+                                          <p class="showError"></p>
+                                        </div>
+                                    </div>
+
+                                    <form data-redirect="login.html" id="SignUpForm" action="registration" method="post" style="margin-top:32px">
+
+                                        <input type="hidden" name="defaultCountry" id="defaultCountry">
+                                        <input type="hidden" name="carrierCode" id="carrierCode">
+                                        <input type="hidden" name="formattedPhone" id="formattedPhone">
+
+                                        <label data-localize="first_name"></label>
+                                        <input data-placeholder="firstnamePlaceholder" required type="text" name="first_name" value="" id="firstName" class="form_input require first_name" placeholder="Please enter firstname" data-role="none" />
+                                        <label data-localize="last_name"></label>
+                                        <input data-placeholder="lastnamePlaceholder" required type="text" name="last_name" value="" id="lastName" class="form_input require last_name" placeholder="Please enter lastname" data-role="none" />
+
+                                        <label data-localize="email"></label>
+                                        <input data-placeholder="emailPlaceholder" required type="email" name="email" value="" id="email" class="form_input require email" placeholder="Please enter email" data-role="none" />
+                                        <span id="email-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+                                        <label data-localize="loginPhoneText"></label>
+                                        <input data-placeholder="loginPhonePlaceholder" type="tel" name="phone" value="" id="phone" class="require" style="border:none !important;padding-left: 100px"/>
+
+                                         <span id="tel-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+                                         <span id="phone-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+                                        <label data-localize="passwordText"></label>
+                                        <input data-placeholder="loginPassPlaceholder" required type="password" name="password" value="" id="password" class="form_input require password" placeholder="Please enter password" data-role="none"/>
+
+                                        <label data-localize="confirmPasswordText"></label>
+                                        <input data-placeholder="confirmPasswordPlaceholder" required type="password" name="password_confirmation" value="" id="password_confirmation" class="form_input require password_confirmation" placeholder="Please confirm password" data-role="none"/>
+
+                                        <label data-localize="userTypeText"></label>
+                                        <select name="type" id="userType">
+                                        </select>
+                                        <span id="type-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+
+                                        <button type="submit" name="submit" class="form_submit signUp customBorderRadius" id="signUp" data-role="none">
+                                            <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> <span id="signUpText" data-localize="signuptext"></span>
+                                        </button>
+
+                                        <button data-localize="loginSignInText" type="button" class="sign_in form_submit signIn" id="signIn" data-role="none" value="Sign In">
+                                        </button>
+                                    </form>
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+        </div>
+        <!-- /page -->
+
+        <script type="text/javascript">
+
+            $(window).on('load', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    //Setting User Type Select Value on load
+                    $('#userType-button span').text((window.localStorage.getItem('language') == 'fr') ? 'Sélectionnez le type d\'utilisateur' : 'Select User Type');
+
+                    //Prepending userType Empty Value on load
+                    $("#userType").prepend(`<option value='' selected='selected'>${(window.localStorage.getItem('language') == 'fr') ? 'Sélectionnez le type d\'utilisateur' : 'Select User Type'}</option>`);
+
+                    defaultCountryShortName()
+                    .then((countryShortName) => 
+                    {
+                        invokeIntelInputPlugin(countryShortName);
+                        checkMerchantUserRoleExistence();
+                    });
+                }
+            });
+
+            // var signUp =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // signUp.initialize();
+
+            //Validate Phone
+            $(document).on('blur', '#phone', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    formattedPhone();
+                    var phone = $(this).val().replace(/-|\s/g,""); //replaces 'whitespaces', 'hyphens'
+                    var phone = $(this).val().replace(/^0+/,"");  //replaces (leading zero - for BD phone number)
+                    var pluginCarrierCode = $(this).intlTelInput('getSelectedCountryData').dialCode;
+                    checkInvalidAndDuplicatePhoneNumber(phone, pluginCarrierCode);
+                }
+            });
+
+            // Validate Emal
+            $(document).on('blur', '#email', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    validateUserEmail($('#email').val());
+                }
+            });
+
+            $(document).on('click', '.signIn', function(e)
+            {
+                e.preventDefault();
+                window.location.replace('login.html');
+            });
+
+            $('#SignUpForm').validate({
+                ignore: ":hidden",
+                rules: {
+                    first_name: {
+                        required: true,
+                    },
+                    last_name: {
+                        required: true,
+                    },
+                    email: {
+                        required: true,
+                        email:true
+                    },
+                    // phone: {
+                    //     required: true,
+                    // },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                    },
+                    password_confirmation: {
+                        required: true,
+                        minlength: 6,
+                        equalTo: "#password"
+                    },
+                    type: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    password_confirmation: {
+                        minlength: (window.localStorage.getItem('language') == 'fr') ? 'Veuillez entrer au moins 6 caractères.' : 'Please enter at least 6 characters.',
+                        equalTo: (window.localStorage.getItem('language') == 'fr') ? 'S\'il vous plaît entrer la même valeur que le champ mot de passe!' :
+                        'Please enter same value as the password field!',
+                    },
+                    password: {
+                        minlength: (window.localStorage.getItem('language') == 'fr') ? 'Veuillez entrer au moins 6 caractères.' : 'Please enter at least 6 characters.',
+                    },
+                },
+                errorPlacement: function (error, element)
+                {
+                    if (element.prop('name') === 'phone') {
+                        error.appendTo('#phone-validation-error');
+                    }
+                    else if (element.prop('name') === 'type')
+                    {
+                        error.appendTo('#type-validation-error');
+                    }
+                    else
+                    {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form, e)
+                {
+                    e.preventDefault();
+                    if(networkState()=='none')
+                    {
+                        onOffline();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        onOnline();
+                        let requestUrl      = $('form').attr('action');
+                        let redirect = $('form').attr('data-redirect');
+                        let data     = $('form').serialize();
+                        signUpRequest(requestUrl,'POST',data,redirect);
+                    }
+                }
+            });
+
+        </script>
+    </body>
+</html>

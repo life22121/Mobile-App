@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <!--Loader starts here-->
+        <style type="text/css">
+            .loader {
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                z-index: 9999999999;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #232b47;
+                width: 100px;
+                height: 100px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            @-webkit-keyframes spin {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <!--Loader ends here-->
+        <style type="text/css">
+            .button {
+                background-color: #4CAF50; /* Green */
+                border: none;
+                color: white;
+                padding: 4px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                -webkit-transition-duration: 0.4s; /* Safari */
+                transition-duration: 0.4s;
+                cursor: pointer;
+                border-radius: 2px;
+            }
+            .button1 {
+                background-color: white;
+                color: black;
+                border: 2px solid #4CAF50;
+            }
+
+            .button1:hover {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+
+            .button3 {
+                background-color: white;
+                color: black;
+                border: 2px solid #f44336;
+            }
+
+            .button3:hover {
+                background-color: #f44336;
+                color: white;
+            }
+            .amount-top h2{
+                padding: 10px 0px;
+            }
+
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                /*border: 1px solid #dddddd;*/
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/hide-spinner.js"></script>
+        <script defer type="text/javascript" src="js/modules/transaction-details.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <!-- <body onload="showLoader();"> -->
+    <body>
+        <div class="loader" style="display: none;"></div>
+        <div data-role="page" id="features" class="secondarypage" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button"><a href="#" onclick="goBackToTransactionsPage()"><img src="images/icons/left-arrow.png" alt="" title="" /></a></div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size: 16px" data-localize="transactionDetailsHeaderText"></h2></div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <!-- Internet Connection Message Div -->
+                <div align="center" class="no_internet_div" id="NoInternetDiv" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span>
+                    </span>
+                </div>
+                <!-- Check User Suspended -->
+                <div class="userSuspendedDiv" style="display: none;text-align: center;font-weight: bold;">
+                    <div class="alert alert-danger">
+                      <i class="fa fa-flag"></i> <strong style="font-size: 24px;"><span data-localize="suspendedText"></span></strong>
+                      <hr>
+                      <p class="showUserSuspendedError"></p>
+                    </div>
+                </div>
+                <!-- Check Request Creator Inactive/Suspended - On Cancel-->
+                <div class="req-creator-status-div" style="display: none;text-align: center;font-weight: bold;">
+                    <div class="alert alert-danger">
+                      <i class="fa fa-flag"></i> <strong style="font-size: 24px;" class="req-creator-status-text"></strong>
+                      <hr>
+                      <p class="req-creator-status-error-text"></p>
+                    </div>
+                </div>
+            </header>
+            <!-- /header -->
+            <div role="main" class="ui-content animate-bottom profileDiv" style="display:none;">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section>
+
+                            <div class="errorDiv" style="display: none">
+                                <div class="alert alert-danger">
+                                  <p style="text-align: center;" class="showError"></p>
+                                </div>
+                            </div>
+
+                            <div class="amount-top">
+                                <div class="col-6">
+                                    <h2 style="font-size: 14px" data-localize="transactionDetailsTransactionTypeText"></h2>
+                                </div>
+                                <div class="col-6">
+                                    <h2 style="font-size: 14px" class="tr_type"></h2>
+                                </div>
+                            </div>
+
+                            <div class="amount-top merchant_div">
+                                <table>
+                                      <tr class="totalfees">
+                                        <td class="merchantTitleText"></td>
+                                        <td class="merchant"></td>
+                                      </tr>
+                                </table>
+                            </div>
+                            <div class="amount-body" style="margin-bottom: -10px">
+                                <div class="col-6">
+                                    <h2 style="font-size: 16px" class="balance"></h2>
+                                </div>
+                                <div class="col-6">
+                                    <h3 style="font-size: 14px" class="tr_date"></h3>
+                                </div>
+                            </div>
+
+                            <div class="amount-top message" style="background: #232b47;margin-top: 6px;">
+                                <table>
+                                      <tr class="totalfees">
+                                        <td>&nbsp;</td>
+                                        <td class=""></td>
+                                      </tr>
+                                      <tr>
+                                        <td>&nbsp;</td>
+                                        <td class="tr_msg" style="float: right;color:#fff;font-size: 12px"></td>
+                                        <td class="tr_email_or_phone" style="display: none;"></td>
+                                      </tr>
+                                </table>
+                            </div>
+
+                            <div class="amount-top">
+                                <table style="table-layout: fixed;">
+                                      <tr class="totalfees">
+                                        <td data-localize="transactionDetailsTransactionIdText"></td>
+                                        <td class="tr_id"></td>
+                                      </tr>
+                                      <tr>
+                                        <td data-localize="transactionDetailsTransactionStatusText"></td>
+                                        <td class="tr_status"></td>
+                                      </tr>
+                                      <tr class="crypto-sender-address-tr" style="display: none;">
+                                        <td>Sender Address</td>
+                                        <td class="crypto-sender-address" style="word-wrap: break-word !important;"></td>
+                                      </tr>
+                                      <tr class="crypto-receiver-address-tr" style="display: none;">
+                                        <td>Receiver Address</td>
+                                        <td class="crypto-receiver-address" style="word-wrap: break-word !important;"></td>
+                                      </tr>
+                                      <tr class="crypto-confirmations-tr" style="display: none;">
+                                        <td>Confirmations</td>
+                                        <td class="crypto-confirmations"></td>
+                                      </tr>
+                                </table>
+                            </div>
+                            <div class="amount-top request">
+                                <table>
+                                      <tr>
+                                        <th colspan="2" data-localize="transactionDetailsSubHeaderText"></th>
+                                      </tr>
+                                      <tr>
+                                        <td class="request_amount_text"></td>
+                                        <td class="request_sent_amount"></td>
+                                      </tr>
+                                      <tr style="border-bottom: 2px solid #ddd" class="totalfees">
+                                        <td data-localize="sendMoneyfeeText" class="request_sent_total_fees_text"></td>
+                                        <td class="request_sent_total_fees"></td>
+                                      </tr>
+                                      <tr style="border-top: 2px solid #ddd">
+                                        <td><span data-localize="sendMoneytotalAmntText"></span> </td>
+                                        <td class="request_sent_total"></td>
+                                      </tr>
+                                </table>
+                            </div>
+                            <div class="amount-bottom description" style="margin-top: 4px">
+                                <table>
+                                      <tr>
+                                        <th data-localize="transactionDetailsNoteText"></th>
+                                      </tr>
+                                      <tr>
+                                        <td style="font-size: 14px;text-align: justify;" class="tr_desc"></td>
+                                      </tr>
+                                </table>
+                            </div>
+                        </section>
+                        <section>
+                            <ul class="features_list_detailed">
+                                <span data-role="accept" action="accept-request-email" class="button button1 acceptrequest accept" data-localize="transactionDetailsAcceptText"></span>
+
+                                <span data-role="cancel" data-redirect="transaction.html" action="cancel-request" class="button button3 cancelrequest cancel">
+                                    <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> <span id="cancelrequestText" data-localize="transactionDetailsCancelText"></span>
+                                </span>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color:#fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+
+        <script type="text/javascript">
+
+            //on go back
+            function goBackToTransactionsPage() //this is needed to load latest transactions data
+            {
+                window.location.href = 'transaction.html';
+            }
+
+            $(window).on('load', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    //
+                    transactionDetails(function(data)
+                    {
+                        // console.log(data.transaction);
+
+                        //status - starts
+                        let status = data.transaction.status;
+                        switch (status)
+                        {
+                            case 'Blocked':
+                                status = (window.localStorage.getItem('language') == 'fr') ? 'Annulé' : 'Cancelled';
+                                break;
+                            case 'Success':
+                                status = (window.localStorage.getItem('language') == 'fr') ? 'Succès' : 'Success';
+                                break;
+                            case 'Pending':
+                                status = (window.localStorage.getItem('language') == 'fr') ? 'en attendant' : 'Pending';
+                                break;
+                            case 'Refund':
+                                status = (window.localStorage.getItem('language') == 'fr') ? 'Remboursé' : 'Refunded';
+                                break;
+                        }
+                        //status - ends
+
+                        //date - starts
+                        let tr_date = data.transaction.t_created_at;
+                        // date - ends
+
+                        //NEEDED FOR UNKNOWN SEND/REQUEST MONEY TRACKING - starts
+                        if (data.transaction.email)
+                        {
+                            $('.tr_email_or_phone').text(data.transaction.email);
+                        }
+                        else if (data.transaction.phone)
+                        {
+                            $('.tr_email_or_phone').text(data.transaction.phone);
+                        }
+                        //NEEDED FOR UNKNOWN SEND/REQUEST MONEY TRACKING - ends
+
+                        // Transaction details - starts
+                        let type;
+                        let totalAmnt;
+                        let msg;
+                        let tr_id;
+                        let tr_ref_id;
+
+                        switch (data.transaction.type)
+                        {
+                            case 'Deposit':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Dépôt' : 'Deposit';//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant déposé' : 'Deposited Amount');//
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Check fees is equal to 0 or greater - starts
+                                if (data.transaction.charge_percentage == 0 && data.transaction.charge_fixed == 0)
+                                {
+                                    $('.request_sent_total_fees_text').hide();
+                                    $('.request_sent_total_fees').hide();
+                                }
+                                else
+                                {
+                                    $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                }
+                                //Check fees is equal to 0 or greater - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.message').hide();
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Withdrawal':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Paiement' : 'Payout';//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant du paiement' : 'Payout Amount');//
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Check fees is equal to 0 or greater - starts
+                                if (data.transaction.charge_percentage == 0 && data.transaction.charge_fixed == 0)
+                                {
+                                    $('.request_sent_total_fees_text').hide();
+                                    $('.request_sent_total_fees').hide();
+                                }
+                                else
+                                {
+                                    $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                }
+                                //Check fees is equal to 0 or greater - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.message').hide();
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Transferred':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Transféré' : data.transaction.type;//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.message').show();
+
+                                msg = (window.localStorage.getItem('language') == 'fr') ? `Vous avez transféré à ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? ` - ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name}<br>[<i> ${data.transaction.end_user_email}</i> ]`  : `${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }` :`You transferred to ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? ` - ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name}<br>[<i> ${data.transaction.end_user_email}</i> ]`  : ` - ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }`
+
+                                $('.tr_msg').html(msg);
+
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant transféré' : 'Transferred Amount');//
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Check fees is equal to 0 or greater - starts
+                                if (data.transaction.charge_percentage == 0 && data.transaction.charge_fixed == 0)
+                                {
+                                    $('.request_sent_total_fees_text').hide();
+                                    $('.request_sent_total_fees').hide();
+                                }
+                                else
+                                {
+                                    $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                }
+                                //Check fees is equal to 0 or greater - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Received':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Reçu' : data.transaction.type;//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+
+                                msg = (window.localStorage.getItem('language') == 'fr') ? `Vous avez reçu de l\'argent de ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? ` - ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_email}</i> ]` : `${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }` : `You received money from ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? ` - ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_email}</i> ]` : ` - ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }`;//
+
+
+                                $('.tr_msg').html(msg);
+
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant reçu' : 'Received Amount');//
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //no fees
+                                $('.request_sent_total_fees_text').hide();
+                                $('.request_sent_total_fees').hide();
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Exchange_From':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Échanger de' : 'Exchange From';
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant d\'échange' : 'Exchange Amount');
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Check fees is equal to 0 or greater - starts
+                                if (data.transaction.charge_percentage == 0 && data.transaction.charge_fixed == 0)
+                                {
+                                    $('.request_sent_total_fees_text').hide();
+                                    $('.request_sent_total_fees').hide();
+                                }
+                                else
+                                {
+                                    $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                }
+                                //Check fees is equal to 0 or greater - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.message').hide();
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Exchange_To':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Échanger à' : 'Exchange To';
+
+                                $('.tr_type').text(type);
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant d\'échange' : 'Exchange Amount');
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+
+                                //no fees
+                                $('.request_sent_total_fees_text').hide();
+                                $('.request_sent_total_fees').hide();
+                                $('.totalfees').hide();
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.message').hide();
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Request_From':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Demande envoyée' : 'Request Sent';//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Quantité exigée' : 'Requested Amount');
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                // $('.totalfees').hide();
+
+                                //no fees
+                                $('.request_sent_total_fees_text').hide();
+                                $('.request_sent_total_fees').hide();
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                $('.tr_date').text(tr_date);
+                                $('.message').show();
+
+                                msg = (window.localStorage.getItem('language') == 'fr') ? `Vous demandez de l\'argent à ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_email}</i> ]` : `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }` :`You are requesting money from ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} <br>[ <i>${data.transaction.end_user_email}</i> ]` : `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} [<i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }`
+
+                                $('.tr_msg').html(msg);
+
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                tr_id = localStorage.getItem('tr_id');
+                                if (status == 'Pending' || status == 'en attendant')// hardcoded status check for french only
+                                {
+                                    $('.accept').hide();
+                                    $('.accept').removeAttr('data-role');
+                                    $('.accept').removeAttr('data-id');
+                                    $('.cancel').show();
+                                    $('.cancel').attr('data-id', tr_id);
+                                }
+                                else if (status == 'Blocked' || status == 'Annulé') // hardcoded status check for french only
+                                {
+                                    $('.accept').hide();
+                                    $('.accept').removeAttr('data-role');
+                                    $('.accept').removeAttr('data-id');
+                                    $('.cancel').hide();
+                                    $('.cancel').removeAttr('data-id');
+                                }
+                                else
+                                {
+                                    $('.accept').hide();
+                                    $('.accept').removeAttr('data-role');
+                                    $('.accept').removeAttr('data-id');
+                                    $('.cancel').hide();
+                                    $('.cancel').attr('data-id', tr_id);
+                                }
+                                $('.merchant_div').hide();
+                                windowSize(); //Set css style depend on window size
+                                break;
+
+                            case 'Request_To':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Demande reçue' : 'Request Received';
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Quantité exigée' : 'Requested Amount');
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Check fees is equal to 0 or greater - starts
+                                if (data.transaction.charge_percentage == 0 && data.transaction.charge_fixed == 0)
+                                {
+                                    $('.request_sent_total_fees_text').hide();
+                                    $('.request_sent_total_fees').hide();
+                                }
+                                else
+                                {
+                                    $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                }
+                                //Check fees is equal to 0 or greater - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                $('.tr_date').text(tr_date);
+
+                                //msg
+                                // $('.message').hide();
+                                $('.message').show();
+                                msg = (window.localStorage.getItem('language') == 'fr') ? `Vous avez reçu une demande d'argent de ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} [ <i>${data.transaction.end_user_email}</i> ]` : `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} [ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }` :`You have received request money from ${ ((data.transaction.end_user_f_name && data.transaction.end_user_l_name) ? ((data.transaction.email) ? `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} [ <i>${data.transaction.end_user_email}</i> ]` : `- ${data.transaction.end_user_f_name}\u00A0${data.transaction.end_user_l_name} [ <i>${data.transaction.end_user_phone}</i> ]`) : ((data.transaction.email) ? data.transaction.email : data.transaction.phone)) }`
+                                $('.tr_msg').html(msg);
+                                //msg
+
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                tr_ref_id = data.transaction.transaction_reference_id;
+                                tr_id = localStorage.getItem('tr_id');
+                                if (status == 'Pending' || status == 'en attendant') // hardcoded status check for french only
+                                {
+                                    $('.accept').show();
+                                    $('.accept').attr('data-role', 'accept');
+                                    $('.accept').attr('data-id', tr_ref_id);
+                                    $('.cancel').show();
+                                    $('.cancel').attr('data-id', tr_id);
+                                }
+                                else if (status == 'Blocked' || status == 'Annulé') // hardcoded status check for french only
+                                {
+                                    $('.cancel').hide();
+                                    $('.cancel').removeAttr('data-id');
+                                    $('.accept').hide();
+                                }
+                                else
+                                {
+                                    $('.accept').hide();
+                                    $('.accept').removeAttr('data-role');
+                                    $('.accept').removeAttr('data-id');
+                                    $('.cancel').hide();
+                                    $('.cancel').attr('data-id', tr_id);
+                                }
+                                $('.merchant_div').hide();
+                                windowSize(); //Set css style depend on window size
+                                break;
+
+                            case 'Payment_Sent':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Paiement envoyé' : 'Payment Sent';
+                                $('.tr_type').text(type);
+
+                                $('.merchant_div').show();
+                                $('.merchantTitleText').text((window.localStorage.getItem('language') == 'fr') ? 'Marchande' : 'Merchant');
+                                $('.merchant').text(data.transaction.merchant_name);
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant du paiement' : 'Payment Amount');
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //no fees
+                                $('.request_sent_total_fees_text').hide();
+                                $('.request_sent_total_fees').hide();
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.message').hide();
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                break;
+
+                            case 'Payment_Received':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Paiement reçu' : 'Payment Received';
+                                $('.tr_type').text(type);
+
+                                $('.merchant_div').show();
+                                $('.merchantTitleText').text((window.localStorage.getItem('language') == 'fr') ? 'Marchande' : 'Merchant');
+                                $('.merchant').text(data.transaction.merchant_name);
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant reçu' : 'Received Amount');
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Check fees is equal to 0 or greater - starts
+                                if (data.transaction.charge_percentage == 0 && data.transaction.charge_fixed == 0)
+                                {
+                                    $('.request_sent_total_fees_text').hide();
+                                    $('.request_sent_total_fees').hide();
+                                }
+                                else
+                                {
+                                    $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                }
+                                //Check fees is equal to 0 or greater - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.message').hide();
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                break;
+
+                            case 'Crypto_Sent':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Crypto Expédié' : "Crypto Sent";//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.message').show();
+
+                                $('.tr_msg').text('');
+
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+
+                                if (data.transaction.receiverAddress != undefined)
+                                {
+                                    // Receiver Address
+                                    $('.crypto-receiver-address-tr').show();
+                                    $('.crypto-receiver-address').text(data.transaction.receiverAddress);
+                                }
+
+                                // Confirmations
+                                if (data.transaction.confirmations != undefined)
+                                {
+                                    // Receiver Address
+                                    $('.crypto-confirmations-tr').show();
+                                    $('.crypto-confirmations').text(data.transaction.confirmations);
+                                }
+
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Montant envoyé' : 'Sent Amount');//
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Network Fee - starts
+                                $('.request_sent_total_fees_text').text((window.localStorage.getItem('language') == 'fr') ? 'Frais de réseau' : 'Network Fee');
+                                $('.request_sent_total_fees').text(data.transaction.totalFees);
+                                //Network Fee - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+
+                            case 'Crypto_Received':
+                                type = (window.localStorage.getItem('language') == 'fr') ? 'Crypto Reçu' : "Crypto Received";//
+                                $('.tr_type').text(type);
+
+                                $('.balance').text(data.transaction.total);
+                                $('.tr_date').text(tr_date);
+                                $('.message').show();
+
+                                $('.tr_msg').text('');
+
+                                $('.tr_id').text(data.transaction.transaction_id);
+                                $('.tr_status').text(status);
+
+                                // Sender Address
+                                if (data.transaction.senderAddress != undefined)
+                                {
+                                     $('.crypto-sender-address-tr').show();
+                                    $('.crypto-sender-address').text(data.transaction.senderAddress);
+                                }
+
+                                // Confirmations
+                                if (data.transaction.confirmations != undefined)
+                                {
+                                    // Receiver Address
+                                    $('.crypto-confirmations-tr').show();
+                                    $('.crypto-confirmations').text(data.transaction.confirmations);
+                                }
+
+                                $('.request').show();
+                                $('.request_amount_text').text((window.localStorage.getItem('language') == 'fr') ? 'Reçu envoyé' : 'Received Amount');//
+                                $('.request_sent_amount').text(data.transaction.subtotal);
+                                $('.totalfees').show();
+
+                                //Network Fee - starts
+                                $('.request_sent_total_fees_text').hide();
+                                $('.request_sent_total_fees').hide();
+                                //Network Fee - ends
+
+                                totalAmnt = String(data.transaction.total);
+                                totalAmnt = totalAmnt.replace('-', '');
+                                $('.request_sent_total').text(totalAmnt);
+
+                                if (data.transaction.description != null)
+                                {
+                                    $('.description').show();
+                                    $('.tr_desc').text(data.transaction.description);
+                                }
+                                else
+                                {
+                                    $('.description').hide();
+                                }
+                                $('.accept').hide();
+                                $('.cancel').hide();
+                                $('.merchant_div').hide();
+                                break;
+                        }
+
+                        // Transaction details - ends
+                    });
+                }
+            });
+
+            // var transDetails =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // transDetails.initialize();
+
+            // Accept Request
+            $(document).on('click', '.acceptrequest', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+
+                    if (window.localStorage.getItem('user-status') == 'Suspended')
+                    {
+                        userIsSuspended();
+                        $('.ui-content').hide();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        checkTransactionReqCreatorStatus(window.localStorage.getItem('tr_id'))
+                        .then((res) =>
+                        {
+                            if (res != "Suspended" && res != "Inactive")
+                            {
+                                acceptrequest();
+                            }
+                            else
+                            {
+                                window.localStorage.setItem('transaction-user-status', res);
+                                window.location.replace('accept-money-email.html');
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    }
+                }
+            });
+
+            // Cancel Request
+            $(document).on('click', '.cancelrequest', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    cancelrequest();
+                }
+            });
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+	<link rel="apple-touch-startup-image"
+		media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+		href="images/apple-touch-startup-image-640x1096.png">
+
+	<!--Css style starts here-->
+	<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+	<link type="text/css" rel="stylesheet" href="style.css" />
+	<link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+	<link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+	<link type="text/css" rel="stylesheet" href="css/sweetalert.css" />
+	<style type="text/css">
+		.ui-page-theme-b .ui-btn {
+			background-color: #fff !important;
+			border-color: transparent !important;
+			color: #000 !important;
+			text-shadow: none;
+			font-size: 20px;
+			padding: 5px;
+			border-radius: 0px;
+		}
+
+		.ui-content {
+			display: none;
+		}
+
+		.loader {
+			position: absolute;
+			left: 50%;
+			top: 60%;
+			z-index: 9999999999;
+			margin: -75px 0 0 -75px;
+			border: 16px solid #f3f3f3;
+			border-radius: 50%;
+			border-top: 16px solid #232b47;
+			width: 100px;
+			height: 100px;
+			-webkit-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+		}
+
+		@-webkit-keyframes spin {
+			0% {
+				-webkit-transform: rotate(0deg);
+			}
+
+			100% {
+				-webkit-transform: rotate(360deg);
+			}
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		.loginform {
+			width: 100% !important;
+			padding: 0px !important;
+		}
+
+		.table>tbody>tr>td h2 {
+			text-align: left !important;
+		}
+
+		.table>tbody>tr>td h4 {
+			text-align: left !important;
+		}
+	</style>
+	<!--Css style ends here-->
+
+	<!--Javascript Library Starts here-->
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="js/sweetalert.min.js"></script>
+	<script type="text/javascript" src="js/pullToRefresh.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+	<script type="text/javascript" src="js/common/translate.js"></script>
+	<script type="text/javascript" src="js/common/language.js"></script>
+	<script type="text/javascript" src="js/common/app.js"></script>
+	<script defer type="text/javascript" src="js/common/check-token.js"></script>
+	<script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+	<script defer type="text/javascript" src="js/common/navigate-to-next.js"></script>
+	<script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+	<script defer type="text/javascript" src="js/common/restrict-to-decimal-pref.js"></script>
+	<script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+	<script defer type="text/javascript" src="js/common/show-success-message.js"></script>
+	<script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+	<script defer type="text/javascript" src="js/modules/withdraw-money-setting.js"></script>
+	<!--Javascript Library Ends here-->
+</head>
+
+<body>
+	<div class="loader" style="display: none"></div>
+	<div data-role="page" id="features" class="secondarypage pageDiv" data-theme="b">
+		<header>
+			<div data-role="header" data-position="fixed">
+				<div class="nav_left_button">
+					<a href="#" onclick="goBackToPayout()" data-nav-title="" data-nav-to="">
+						<img src="images/icons/left-arrow.png" alt="" title="" />
+					</a>
+				</div>
+				<div class="nav_center_logo">
+					<div class="p-title">
+						<h2 style="font-size:16px" data-localize="payoutSetting"></h2>
+					</div>
+				</div>
+				<div class="nav_right_button">
+					<a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- Internet Connection Message Div -->
+			<div align="center" id="NoInternetDiv" class="no_internet_div"
+				style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+				<span></span>
+			</div>
+			<!-- Check User Suspended -->
+			<div class="userSuspendedDiv" style="display: none;text-align: center;font-weight: bold;">
+				<div class="alert alert-danger">
+					<i class="fa fa-flag"></i> <strong style="font-size: 24px;"><span
+							data-localize="suspendedText"></span></strong>
+					<hr>
+					<p class="showUserSuspendedError"></p>
+				</div>
+			</div>
+		</header>
+		<!-- /header -->
+		<div role="main" class="ui-content animate-right-to-center" id="ptr" style="display: none;">
+			<div class="pages_maincontent">
+				<div class="page_content">
+					<section>
+						<div class="loginform">
+							<button class="form_submit customBorderRadius" data-role="none"
+								style="margin-bottom: 15px !important;">
+								<a href="#" onclick="goToAddEditPayoutSetting()" data-localize="addPayoutSetting"
+									style="color: #fff;"></a>
+							</button>
+							<form id="withdrawMoneyForm" class="moneyForm" method="post">
+								<!-- Show Error Message -->
+								<div class="errorDiv" style="display: none">
+									<div class="alert alert-danger">
+										<p style="text-align: center;" class="showError"></p>
+									</div>
+								</div>
+								<!-- Show Success Message -->
+								<div class="successDiv" style="display: none">
+									<div class="alert alert-success">
+										<p style="text-align: center;" class="showSuccess"></p>
+									</div>
+								</div>
+							</form>
+						</div>
+					</section>
+					<section>
+						<div class="tabs_content transaction" id="b-tabs">
+							<div data-role="tabs" id="tabs">
+								<!--For All Transactions starts here-->
+								<div id="one">
+									<div class="card-main-custom">
+										<div class="card-header">
+											<h2 style="font-size: 18px !important" data-localize="paypal"></h2>
+										</div>
+										<div class="card-body">
+											<table class="table paypal">
+												<tbody>
+													<!-- Dynamic all pending transaction List goes here-->
+												</tbody>
+											</table>
+										</div>
+										<div class="card-header">
+											<h2 style="font-size: 18px !important" data-localize="bank"></h2>
+										</div>
+										<div class="card-body">
+											<table class="table bank">
+												<tbody>
+													<!-- Dynamic all successful transaction List goes here-->
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<!-- /content -->
+		<aside>
+			<div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+				<div class="user_login_info">
+					<div class="user_thumb_container">
+						<div class="user_thumb">
+							<img class="image_src" src="images/author.png" alt="" title="" />
+						</div>
+					</div>
+					<div class="user_details">
+						<p class="username" style="color: #fff;"></p>
+					</div>
+					<nav class="user-nav" id="menuItem">
+						<!--Load a dynamice html content for menu-->
+					</nav>
+				</div>
+				<div class="close_loginpopup_button"><a href="#" data-rel="close"><img
+							src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+			</div>
+		</aside>
+		<!-- /panel -->
+	</div>
+	<!-- /page -->
+	<!--Javascript-->
+	<script type="text/javascript">
+		//on go back
+		function goBackToPayout() {
+			window.location.href = 'withdraw-money.html';
+		}
+		//on go back
+		function goToAddEditPayoutSetting() {
+			window.location.href = 'withdraw-money-setting-add.html';
+		}
+		$(window).on('load', function () {
+			if (networkState() == 'none') {
+				onOffline();
+				$(window).scrollTop(0);
+			} else {
+				onOnline();
+				if (window.localStorage.getItem('user-status') == 'Suspended') {
+					userIsSuspended();
+					$('.ui-content').hide();
+					$(window).scrollTop(0);
+				} else {
+					availablePayoutSetting();
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

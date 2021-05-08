@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <style type="text/css">
+            #keyboard {
+            width:132%;
+            margin:0 auto;
+            }
+            ol.keys {
+              list-style-type:none;
+            }
+            ol.keys li {
+              width:25%;
+              display:block;
+              text-align:center;
+              height:2em;
+              float:left;
+              font-size:1.3em;
+              font-family:sans-serif;
+              padding-top:.7em;
+              border:.5px solid rgb(100,100,100);
+              color:white;
+              background-color:#232b47;
+            }
+
+            ol.keys li:hover {
+              cursor:pointer;
+            }
+            ol.keys li:active {
+              background-color:#232b47;
+              color:#000;
+            }
+
+            .ui-page-theme-b .ui-btn {
+                background-color: #fff !important;
+                border-color: transparent !important;
+                color: #000 !important;
+                text-shadow: none;
+                font-size: 20px;
+                padding: 5px;
+                border-radius: 0px;
+            }
+
+            .ui-content{
+                display: none;
+            }
+
+            .error {
+                color: red !important;
+                font-size: 14px;
+                font-weight: 800;
+
+            }
+
+            .loader {
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                z-index: 9999999999;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #232b47;
+                width: 100px;
+                height: 100px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            @-webkit-keyframes spin {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/stripe-v3.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-next.js"></script>
+        <script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/hide-spinner.js"></script>
+        <script defer type="text/javascript" src="js/modules/deposit-money.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div class="loader" style="display: none;"></div>
+        <div data-role="page" id="features" class="secondarypage pageDiv" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button">
+                            <a href="#" onclick="backToDeposit()" data-nav-title="" data-nav-to="">
+                                <img src="images/icons/left-arrow.png" alt="" title="" />
+                            </a>
+                    </div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:16px" data-localize="depositText"></h2></div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <!-- Internet Connection Message Div -->
+                <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span></span>
+                </div>
+            </header>
+            <!-- /header -->
+
+            <!-- Deposit Confirm Page For Stripe -->
+            <div role="main" class="ui-content animate-right-to-center" id="depositStripeReviewSection" style="display: none;">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section class="margin-50" style="margin-top: 40px;">
+                            <div class="loginform loginFrom2">
+                                <h2 style="font-size: 14px">
+                                    <p style="font-size:14px;padding:5px;text-align: center;"><span data-localize="depositConfirmSubHeaderText"></span></p>
+                                </h2>
+                                <div>
+                                    <span id="payment_method_logo"></span>
+                                </div>
+                                <br>
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="depositConfirmAmount"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dcurrencyAmount" style="float: right;"></span></h2>
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="sendMoneyfeeText"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalFees" style="float: right;"></span></h2>
+                                <hr style="border: 1px solid #ddd">
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="sendMoneytotalAmntText"></span>&nbsp;&nbsp;&nbsp;<span class="totalAmount" style="float: right;"></span></h2>
+
+                                <button data-localize="sendMoneyConfirmBtnText" type="submit" name="submit" class="form_submit stripeDepositReview customBorderRadius" data-redirect="deposit-money-success.html" id="submit" data-role="none" style="font-size: 14px"></button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <div role="main" class="ui-content animate-right-to-center" id="stripeSection">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section class="margin-50" style="margin-top: 40px;">
+                            <form id="depositMoneyConfirmStripeForm" method="post" action="deposit/stripe-payment-store">
+                                <div class="loginform">
+                                    <div>
+                                        <label  data-localize="stripeCardNumber"></label>
+                                        <div id="card-number"></div>
+                                        <div id="card-errors" class="error"></div>
+                                    </div>
+                                    <div>
+                                        <label for="usr" data-localize="MM/YY"></label>
+                                        <div id="card-expiry"></div>
+                                    </div>
+                                    <div>
+                                        <label for="usr" data-localize="cvc"></label>
+                                        <div id="card-cvc"></div>
+                                    </div>
+                                    <!-- <button data-localize="sendMoneyConfirmBtnText" type="submit" name="submit" class="form_submit stripeDepositConfirm customBorderRadius" data-redirect="deposit-money-success.html"
+                                    id="submit" data-role="none" style="font-size: 14px"></button> -->
+
+                                    <button type="submit" name="submit" class="form_submit stripeDepositConfirm customBorderRadius" data-redirect="deposit-money-success.html"
+                                    data-role="none" style="font-size: 14px">
+                                        <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> <span data-localize="sendMoneyConfirmBtnText" id="stripeDepositConfirmBtnText"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <!--Javascript-->
+        <script type="text/javascript">
+
+            // Deposit - Success
+            function depositMoneyPayStripe(stripe_token)
+            {
+                $.ajax(
+                {
+                    url: request_url($('#depositMoneyConfirmStripeForm').attr('action')),
+                    type: "post",
+                    dataType:'json',
+                    data: {
+                        'stripeToken': stripe_token.id,
+                        'user_id': localStorage.getItem('user_id'),
+                        'amount': localStorage.getItem('depositAmount'),
+                        'totalAmount': localStorage.getItem('totalAmount'),
+                        'totalFees': localStorage.getItem('depositFees'),
+                        'currency_id': localStorage.getItem('depositCurrencyId'),
+                        'deposit_payment_id': localStorage.getItem('deposit_payment_id'),
+                        'deposit_payment_name': localStorage.getItem('deposit_payment_name'),
+                    },
+                    beforeSend: function(xhr)
+                    {
+                        xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
+                        xhr.setRequestHeader('Authorization-Token', `${window.localStorage.getItem('token')}`);
+                        $('.pageDiv').css('display', 'none'); //fixed by parvez
+                        $('.loader').css('display', 'block'); //show loader
+                    },
+                })
+                .done(function(data)
+                {
+                    $('.loader').css('display', 'none'); //hide loader
+                    $('.pageDiv').css('display', 'block'); //fixed by parvez
+
+                    if (data.success.status == 200)
+                    {
+                        window.location.href = 'deposit-money-success.html';
+                    }
+                    else
+                    {
+                        console.log(data.success.message);
+                        return false;
+                    }
+                })
+                .fail(function(error)
+                {
+                    console.log(error);
+                });
+            }
+
+            //on load
+            $(window).on('load', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    var currency_id = window.localStorage.getItem('depositCurrencyId');
+                    $.ajax(
+                    {
+                        url: request_url('deposit/get-stripe-info'),
+                        type: "post",
+                        dataType:'json',
+                        data: {
+                            'currency_id': currency_id,
+                            'method_id': 2, //Stripe
+                        },
+                        beforeSend: function(xhr)
+                        {
+                            xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
+                            xhr.setRequestHeader('Authorization-Token', `${window.localStorage.getItem('token')}`);
+                            $('.pageDiv').css('display', 'none'); //needed as stripe js gets delayed in phone
+                            $('.loader').css('display', 'block'); //needed as stripe js gets delayed in phone
+                        },
+                    })
+                    .done(function(data)
+                    {
+                        $('.loader').css('display', 'none');//needed as stripe js gets delayed in phone
+                        $('.pageDiv').css('display', 'block'); //needed as stripe js gets delayed in phone
+
+                        $('#depositStripeReviewSection').css('display', 'block'); //show page
+                        if (data.success.status == 200)
+                        {
+                            stripeProcess(data.success.stripe_keys.publishable_key);
+                            $("#payment_method_logo").html(`<img class="" src="${SITE_URL.replace('api/','')}/public/images/payment_gateway/stripe.jpg" class="img-responsive" style="max-width: 130px; margin:auto" />`);
+                            $('.paymentmethodName').text(window.localStorage.getItem('deposit_payment_name'));
+                            $('.totalFees').text(getMoneyFormat(window.localStorage.getItem('depositCurrencySymbol'), getDecimalNumberFormat(window.localStorage.getItem('depositFees'))));
+                            $('.dcurrencyAmount').text(getMoneyFormat(window.localStorage.getItem('depositCurrencySymbol'), getDecimalNumberFormat(window.localStorage.getItem('depositAmount'))));
+                            $('.totalAmount').text(getMoneyFormat(window.localStorage.getItem('depositCurrencySymbol'), getDecimalNumberFormat(window.localStorage.getItem('totalAmount'))));
+                        }
+                        else
+                        {
+                            console.log(data.success.message);
+                            return false;
+                        }
+                    })
+                    .fail(function(error)
+                    {
+                        console.log(error);
+                    });
+                }
+            });
+
+            // var depositMoneyConfirmStripe =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // depositMoneyConfirmStripe.initialize();
+
+            // navigate to Stripe Section
+            $(document).on('click', '.stripeDepositReview', function(e)
+            {
+                e.preventDefault();
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    let depositMoneyAmountSectionTitle = (window.localStorage.getItem('language') == 'fr') ? 'Déposez avec Stripe' : 'Deposit with Stripe';
+                    navigateTo('stripeSection', depositMoneyAmountSectionTitle, 'depositStripeReviewSection');
+                }
+            });
+
+            if (networkState() == 'none')
+            {
+                onOffline();
+                $(window).scrollTop(0);
+            }
+            else
+            {
+                onOnline();
+
+                //stripe Starts
+                function stripeProcess(key)
+                {
+                    // Create a Stripe client
+                    var stripe = Stripe(key);
+                    // Create an instance of Elements
+                    var elements = stripe.elements();
+                    // Custom styling can be passed to options when creating an Element.
+                    // (Note that this demo uses a wider set of styles than the guide below.)
+                    var style = {
+                        base: {
+                            position: 'relative',
+                            display: 'block',
+                            width: '100%',
+                            height: '34px ',
+                            border: '1px solid #d2d2d2',
+                            padding: '0 12px',
+                            color: 'rgba(56, 56, 56, 0.85)',
+                            margin: '0 0 10px 0',
+                            background: '#FFFFFF',
+                            fontSize: '16px',
+                            '::placeholder': {
+                                color: '#aab7c4'
+                            }
+                        },
+                        invalid: {
+                            color: '#fa755a',
+                            iconColor: '#fa755a'
+                        }
+                    };
+                    // Create an instance of the card Element
+                    var cardNumber = elements.create('cardNumber', {style: style});
+                    cardNumber.mount('#card-number');
+                    var cardExpiry = elements.create('cardExpiry', {style: style});
+                    cardExpiry.mount('#card-expiry');
+                    var cardCvc = elements.create('cardCvc', {style: style});
+                    cardCvc.mount('#card-cvc');
+                    // Handle real-time validation errors from the card Element.
+                    cardNumber.addEventListener('change', function (event) {
+                        var displayError = document.getElementById('card-errors');
+                        if (event.error) {
+                            displayError.textContent = event.error.message;
+                        } else {
+                            displayError.textContent = '';
+                        }
+                    });
+
+                    // Handle form submission
+                    var form = document.getElementById('depositMoneyConfirmStripeForm');
+                    form.addEventListener('submit', function (event)
+                    {
+                        event.preventDefault();
+
+                        let depositByStripeShowLoadingText = (window.localStorage.getItem('language') == 'fr') ? 'Confirmation...' : 'Confirming...';
+                        showSpinnerWithButtonDisabled(".stripeDepositConfirm", "#stripeDepositConfirmBtnText", depositByStripeShowLoadingText);
+
+                        stripe.createToken(cardNumber).then(function (result)
+                        {
+                            if (result.error)
+                            {
+                                // console.log('error' + result.error)
+
+                                let depositByStripeHideLoadingText = (window.localStorage.getItem('language') == 'fr') ? 'Confirmation' : 'Confirm';
+                                hideSpinnerWithButtonEnabled(".stripeDepositConfirm", "#stripeDepositConfirmBtnText", depositByStripeHideLoadingText);
+
+                                // Inform the user if there was an error
+                                var errorElement = document.getElementById('card-errors');
+                                errorElement.textContent = result.error.message;
+                                return false;
+                            }
+                            else
+                            {
+                                // Send the token to your server
+                                stripeTokenHandler(result.token);
+
+                                //create Deposit
+                                depositMoneyPayStripe(result.token);
+                            }
+                        });
+                    });
+
+                    function stripeTokenHandler(token) {
+                        $('#payment-form').append('<input type="hidden" name="stripeToken" value="' + token.id + '">');
+                    }
+                }
+                //Stripe ends
+            }
+
+        </script>
+    </body>
+</html>

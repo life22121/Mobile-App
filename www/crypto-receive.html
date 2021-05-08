@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <!-- sweetalert -->
+        <link type="text/css" rel="stylesheet" href="css/sweetalert.css" />
+        <style type="text/css">
+            /* Custom media query */
+            @media only screen and (max-width: 320px) {
+                .p-title h2 {
+                    font-size: 20px;
+                }
+            }
+            .loader {
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                z-index: 9999999999;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #232b47;
+                width: 100px;
+                height: 100px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            @-webkit-keyframes spin {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            .ui-page-theme-b .ui-btn {
+                background-color: #fff !important;
+                border-color: transparent !important;
+                color: #000 !important;
+                text-shadow: none;
+                font-size: 20px;
+                padding: 5px;
+                border-radius: 0px;
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <!-- jquery.qrcode -->
+        <script type="text/javascript" src="plugins/jquery-qrcode/jquery.qrcode.min.js" charset="utf-8"></script>
+        <!-- sweetalert -->
+        <script type="text/javascript" src="js/sweetalert.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/modules/profile.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div class="loader" style="display: none;"></div>
+        <div data-role="page" id="features" class="secondarypage" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button">
+                        <a href="#" onclick="goBackToCryptoWallets()"><img src="images/icons/left-arrow.png" alt="" title="" /></a>
+                    </div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <!-- TODO: translation -->
+                            <h2 class="titleText" data-localize="cryptoReceiveHeadText"></h2>
+                        </div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </header>
+            <!-- /header -->
+            <div role="main" class="ui-content animate-bottom profileDiv" style="display: none;">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section>
+                            <div class="dboard-profile">
+                                <div class="pro-left"><a href="#" class="editProfile" data-transition="slidefade"><img style="border-radius: 50%" class="image_src" src="images/author.png" alt="" title="" /></a> </div>
+                                <div class="pro-right">
+                                    <h2 style="font-size: 16px" class="username"></h2>
+                                    <h4 style="font-size: 14px" class="userEmail"></h4>
+                                    <h4 style="font-size: 14px" class="userPhone"></h4>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="margin-50" style="margin-top: 10px;">
+                                <div class="loginform">
+                                    <div style="text-align: center!important;">
+                                        <!-- Receive address head text section-->
+                                        <span style="font-size: 18px;color: #181818;font-weight: 600;" data-localize="cryptoReceiveAddressQrCodeText"></span>
+
+                                        <!-- Receive address qr-code section-->
+                                        <div id="wallet-address" style="margin: 20px auto !important;"></div>
+
+                                        <!-- Warning Section -->
+                                        <span style="color: #6c757d!important;display: block;margin-top: .25rem;font-size: 100%;font-weight: 400;">
+                                            <b><span data-localize="cryptoReceiveWarnignTextA"></span> <span class="crypto-code"></span> <span data-localize="cryptoReceiveWarnignTextB"></span></b>, <span data-localize="cryptoReceiveWarnignTextC"></span>.
+                                        </span>
+                                        <br>
+
+                                        <!-- Receiver Address Copy Section -->
+                                        <span style="font-size: 18px;color: #181818;font-weight: 600;" data-localize="cryptoReceiveAddressHeadText"></span>
+                                        <input type="text" class="form-control copy-wallet-address" readonly="readonly" style="background-color: lightgray;">
+                                        <button type="submit" class="form_submit copy-wallet-address-btn" style="margin-bottom: 10px; border-radius: 0px !important" data-role="none">
+                                            <span data-localize="cryptoReceiveCopyText">Copy</span>
+                                        </button>
+                                    </div>
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+            <!-- /content -->
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <!--Javascript Library Ends here-->
+        <script type="text/javascript">
+
+            //on go back
+            function goBackToCryptoWallets()
+            {
+                window.location.replace('crypto-wallets.html');
+            }
+
+            // var cryptoReceive =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {
+            //         if (networkState() == 'none')
+            //         {
+            //             onOffline();
+            //             $(window).scrollTop(0);
+            //         }
+            //         else
+            //         {
+            //             onOnline();
+            //             //Header - starts
+            //             showUserEmailPhone(); // in common/app.js
+            //             getUserDefaultWalletUpdatedBalance();
+            //             //Header - ends
+
+            //             const senderWalletAddress = window.localStorage.getItem('sender-wallet-address');
+            //             const cryptoCurrencyCode = window.localStorage.getItem('crypto-currency-code');
+            //             if (senderWalletAddress != null && cryptoCurrencyCode != null)
+            //             {
+            //                 jQuery('#wallet-address').qrcode({ text : `${senderWalletAddress}` });
+            //                 $(".crypto-code").text(cryptoCurrencyCode);
+            //                 $(".copy-wallet-address").val(senderWalletAddress);
+            //             }
+            //             else
+            //             {
+            //                 window.location.replace('profile.html');
+            //             }
+            //         }
+            //     }
+            // };
+            // cryptoReceive.initialize();
+
+            $(window).on('load',function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    //Header - starts
+                    showUserEmailPhone(); // in common/app.js
+                    getUserDefaultWalletUpdatedBalance();
+                    //Header - ends
+
+                    const senderWalletAddress = window.localStorage.getItem('sender-wallet-address');
+                    const cryptoCurrencyCode = window.localStorage.getItem('crypto-currency-code');
+                    if (senderWalletAddress != null && cryptoCurrencyCode != null)
+                    {
+                        jQuery('#wallet-address').qrcode({ text : `${senderWalletAddress}` });
+                        $(".crypto-code").text(cryptoCurrencyCode);
+                        $(".copy-wallet-address").val(senderWalletAddress);
+                    }
+                    else
+                    {
+                        window.location.replace('profile.html');
+                    }
+                }
+            });
+
+            $(document).on('click', '.copy-wallet-address-btn', function(e)
+            {
+                e.preventDefault();
+                $('.copy-wallet-address').select();
+                document.execCommand('copy');
+                swal({
+                    title: `${(window.localStorage.getItem('language') == 'fr') ? 'Copié' : 'Copied'}!`,
+                    text:  `${(window.localStorage.getItem('language') == 'fr') ? 'Adresse copiée' : 'Address Copied'}!`,
+                    type: "success",
+                    closeOnClickOutside: false,
+                    closeOnEsc: false,
+                });
+            });
+        </script>
+    </body>
+</html>

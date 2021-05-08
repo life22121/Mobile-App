@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+	<link rel="apple-touch-startup-image"
+		media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+		href="images/apple-touch-startup-image-640x1096.png" />
+
+	<!--Css style starts here-->
+	<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css" />
+	<link type="text/css" rel="stylesheet" href="style.css" />
+	<link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+	<link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+	<link type="text/css" rel="stylesheet" href="css/sweetalert.css" />
+	<style type="text/css">
+		.ui-page-theme-b .ui-btn {
+			background-color: #fff !important;
+			border-color: transparent !important;
+			color: #000 !important;
+			text-shadow: none;
+			font-size: 20px;
+			padding: 5px;
+			border-radius: 0px;
+		}
+
+		.ui-content {
+			display: none;
+		}
+
+		.loader {
+			position: absolute;
+			left: 50%;
+			top: 60%;
+			z-index: 9999999999;
+			margin: -75px 0 0 -75px;
+			border: 16px solid #f3f3f3;
+			border-radius: 50%;
+			border-top: 16px solid #232b47;
+			width: 100px;
+			height: 100px;
+			-webkit-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+		}
+
+		@-webkit-keyframes spin {
+			0% {
+				-webkit-transform: rotate(0deg);
+			}
+
+			100% {
+				-webkit-transform: rotate(360deg);
+			}
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+	<!--Css style ends here-->
+
+	<!--Javascript Library Starts here-->
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="js/sweetalert.min.js"></script>
+	<script type="text/javascript" src="js/pullToRefresh.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+	<script type="text/javascript" src="js/common/translate.js"></script>
+	<script type="text/javascript" src="js/common/language.js"></script>
+	<script type="text/javascript" src="js/common/app.js"></script>
+	<script defer type="text/javascript" src="js/common/check-token.js"></script>
+	<script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+	<script defer type="text/javascript" src="js/common/navigate-to-next.js"></script>
+	<script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+	<script defer type="text/javascript" src="js/common/restrict-to-decimal-pref.js"></script>
+	<script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+	<script defer type="text/javascript" src="js/common/show-success-message.js"></script>
+	<script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+	<script defer type="text/javascript" src="js/modules/withdraw-money.js"></script>
+	<script defer type="text/javascript" src="js/modules/withdraw-money-setting-add.js"></script>
+	<!--Javascript Library Ends here-->
+</head>
+
+<body>
+	<div class="loader" style="display: none"></div>
+	<div data-role="page" id="features" class="secondarypage pageDiv" data-theme="b">
+		<header>
+			<div data-role="header" data-position="fixed">
+				<div class="nav_left_button">
+					<a href="#" onclick="goBackToPayoutSetting()" data-nav-title="" data-nav-to="">
+						<img src="images/icons/left-arrow.png" alt="" title="" />
+					</a>
+				</div>
+				<div class="nav_center_logo">
+					<div class="p-title">
+						<h2 style="font-size:16px" data-localize="add-payout-setting"></h2>
+					</div>
+				</div>
+				<div class="nav_right_button">
+					<a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- Internet Connection Message Div -->
+			<div align="center" id="NoInternetDiv" class="no_internet_div"
+				style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+				<span></span>
+			</div>
+			<!-- Check User Suspended -->
+			<div class="userSuspendedDiv" style="display: none;text-align: center;font-weight: bold;">
+				<div class="alert alert-danger">
+					<i class="fa fa-flag"></i>
+					<strong style="font-size: 24px;"><span data-localize="suspendedText"></span></strong>
+					<hr />
+					<p class="showUserSuspendedError"></p>
+				</div>
+			</div>
+		</header>
+		<!-- /header -->
+		<div role="main" class="ui-content animate-right-to-center" id="ptr" style="display: block;">
+			<div class="pages_maincontent" style="margin-top: -32px">
+				<div class="page_content">
+					<section>
+						<div class="Divs">
+							<p class="requestMoney"
+								style="color: green;text-align: center;font-size: 14px;font-weight: bold;margin-bottom: 40px;">
+							</p>
+						</div>
+						<div class="loginform">
+							<!-- Show Error Message -->
+							<div class="errorDiv" style="display: none">
+								<div class="alert alert-danger">
+									<p style="text-align: center;" class="showError"></p>
+								</div>
+							</div>
+							<!-- Show Success Message -->
+							<div class="successDiv" style="display: none">
+								<div class="alert alert-success">
+									<p style="text-align: center;" class="showSuccess"></p>
+								</div>
+							</div>
+
+							<form id="addWithdrawSettingForm" class="moneyForm" method="post"
+								action="add-withdraw-setting">
+								<label data-localize="payoutPaymentMethodText"></label>
+								<select name="paymentmethod" id="paymentmethod" required="true">
+								</select>
+								<span id="paymentValidate"
+									style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+								<div id="paypalForm" style="display: block;">
+									<label data-localize="email"></label>
+									<input required type="email" name="email" value="" id="email"
+										class="form_input require email" data-role="none" />
+									<span id="email-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+								</div>
+								<div id="bankForm" style="display: none;">
+									<label data-localize="account-name"></label>
+									<input required type="text" name="account_name" class="form_input require"
+										data-role="none" />
+									<span id="account-name-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="account-number"></label>
+									<input required type="text" name="account_number" id="account_number"
+										class="form_input require" data-role="none" />
+									<span id="account-number-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="swift-code"></label>
+									<input required type="text" name="swift_code" id="swift_code"
+										class="form_input require" data-role="none" />
+									<span id="swift-code-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="bank-name"></label>
+									<input required type="text" name="bank_name" id="bank_name"
+										class="form_input require" data-role="none" />
+									<span id="bank-name-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="branch-name"></label>
+									<input required type="text" name="branch_name" id="branch_name"
+										class="form_input require" data-role="none" />
+									<span id="branch-name-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="branch-city"></label>
+									<input required type="text" name="branch_city" id="branch_city"
+										class="form_input require" data-role="none" />
+									<span id="branch-city-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="branch-address"></label>
+									<input required type="text" name="branch_address" id="branch_address"
+										class="form_input require" data-role="none" />
+									<span id="branch-address-validation-error"
+										style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+									<label data-localize="country"></label>
+									<select name="country" id="country" required="true">
+									</select>
+
+								</div>
+
+								<div>
+									<button data-localize="submit" type="submit" name="submit"
+										class="form_submit customBorderRadius" id="submit" data-role="none"></button>
+								</div>
+							</form>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<!-- /content -->
+		<aside>
+			<div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+				<div class="user_login_info">
+					<div class="user_thumb_container">
+						<div class="user_thumb">
+							<img class="image_src" src="images/author.png" alt="" title="" />
+						</div>
+					</div>
+					<div class="user_details">
+						<p class="username" style="color: #fff;"></p>
+					</div>
+					<nav class="user-nav" id="menuItem">
+						<!--Load a dynamice html content for menu-->
+					</nav>
+				</div>
+				<div class="close_loginpopup_button">
+					<a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+				</div>
+			</div>
+		</aside>
+		<!-- /panel -->
+	</div>
+	<!-- /page -->
+
+	<!--Javascript-->
+	<script type="text/javascript">
+		//on go back
+		function goBackToPayoutSetting() {
+			window.location.href = "withdraw-money-setting.html";
+		}
+		$(window).on("load", function () {
+			if (networkState() == "none") {
+				onOffline();
+				$(window).scrollTop(0);
+			} else {
+				onOnline();
+				if (window.localStorage.getItem("user-status") == "Suspended") {
+					userIsSuspended();
+					$(".ui-content").hide();
+					$(window).scrollTop(0);
+				} else {
+					avaiablePayoutMethod()
+						.then(function () {
+							changePaymentMethod();
+						});
+				}
+			}
+		});
+
+
+
+		$('#paymentmethod').on('change', function () {
+			changePaymentMethod();
+		});
+
+
+
+		function changePaymentMethod() {
+
+			let paymentmethod = $("#paymentmethod option:selected").text();
+			console.log(paymentmethod);
+
+			if (paymentmethod == 'Paypal') {
+
+				$('#bankForm').hide();
+				$('#paypalForm').css('display', 'block');
+			} else if (paymentmethod == 'Bank') {
+
+				getAllCountries()
+					.then(function () {
+						$('#bankForm').css('display', 'block');
+						$('#paypalForm').css('display', 'none');
+					});
+			}
+
+		}
+
+		$('#addWithdrawSettingForm').validate({
+			rules: {
+				paymentmethod: {
+					required: true
+				},
+				email: {
+					required: true,
+					email: true
+				},
+				account_name: {
+					required: true
+				},
+				account_number: {
+					required: true
+				},
+				swift_code: {
+					required: true
+				},
+				bank_name: {
+					required: true
+				},
+				branch_name: {
+					required: true
+				},
+				branch_city: {
+					required: true
+				},
+				branch_address: {
+					required: true,
+				},
+				country: {
+					required: true
+				},
+				mobilecountry: {
+					required: true
+				},
+				depositer_name: {
+					required: true
+				},
+				deposit_number: {
+					required: true
+				},
+				gsm_company: {
+					required: true
+				},
+			},
+			errorPlacement: function (error, element) {
+				if (element.attr('name') === 'paymentmethod') {
+					error.appendTo('#paymentValidate');
+				} else {
+					error.insertAfter(element);
+				}
+			},
+			submitHandler: function (form, e) {
+				e.preventDefault();
+				if (networkState() == 'none') {
+					onOffline();
+					$(window).scrollTop(0);
+				} else {
+					onOnline();
+					addWithdrawSetting();
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

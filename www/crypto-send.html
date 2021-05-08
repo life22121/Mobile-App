@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+      <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+      <!--Css style starts here-->
+      <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+      <link type="text/css" rel="stylesheet" href="style.css" />
+      <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+      <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+      <style type="text/css">
+          /* Custom media query */
+          @media only screen and (max-width: 320px) {
+              .p-title h2 {
+                  font-size: 13px;
+              }
+          }
+          #keyboard {
+            width:132%;
+            margin:0 auto;
+          }
+          ol.keys {
+            list-style-type:none;
+          }
+          ol.keys li {
+            width:25%;
+            display:block;
+            text-align:center;
+            height:2em;
+            float:left;
+            font-size:1.3em;
+            font-family:sans-serif;
+            padding-top:.7em;
+            border:.5px solid rgb(100,100,100);
+            color:white;
+            background-color:#232b47;
+          }
+          ol.keys li:hover {
+            cursor:pointer;
+          }
+          ol.keys li:active {
+            background-color:#232b47;
+            color:#000;
+          }
+          .ui-page-theme-b .ui-btn {
+              background-color: #fff !important;
+              border-color: transparent !important;
+              color: #000 !important;
+              text-shadow: none;
+              font-size: 20px;
+              padding: 5px;
+              border-radius: 0px;
+          }
+      </style>
+      <!--Css style ends here-->
+
+      <!--Javascript Library Starts here-->
+      <script type="text/javascript" src="js/jquery.min.js"></script>
+      <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+      <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+      <script type="text/javascript" src="js/pullToRefresh.js"></script>
+      <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+      <script type="text/javascript" src="js/common/translate.js"></script>
+      <script type="text/javascript" src="js/common/language.js"></script>
+      <script type="text/javascript" src="js/common/app.js"></script>
+      <script defer type="text/javascript" src="js/common/check-token.js"></script>
+      <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+      <script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+      <script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+      <script defer type="text/javascript" src="js/common/navigate-to-next.js"></script>
+      <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+      <script defer type="text/javascript" src="js/common/hide-spinner.js"></script>
+      <script defer type="text/javascript" src="js/modules/crypto-send.js"></script>
+      <!--Javascript Library Ends here-->
+  </head>
+
+  <body>
+      <div class="loader" style="display: none;"></div>
+      <div data-role="page" id="features" class="secondarypage" data-theme="b">
+          <header>
+              <div data-role="header" data-position="fixed">
+                  <div class="nav_left_button">
+                      <a href="#" onclick="backNavigateTo(event)" data-nav-title="" data-nav-to="">
+                          <img src="images/icons/left-arrow.png" alt="" title="" />
+                      </a>
+                  </div>
+                  <div class="nav_center_logo">
+                      <div class="p-title">
+                          <h2 class="titleText"><span data-localize="cryptoSendHeadText">Send</span> <span class="crypto-currency-code"></span></h2>
+                      </div>
+                  </div>
+                  <div class="nav_right_button">
+                      <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                  </div>
+                  <div class="clear"></div>
+              </div>
+
+              <!-- Internet Connection Message Div -->
+                <div align="center" class="no_internet_div" id="NoInternetDiv" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span>
+                    </span>
+                </div>
+          </header>
+          <!-- /header -->
+
+          <!-- Recipient Address & Amount -->
+          <div role="main" class="ui-content animate-right-to-center" id="crypto-send-receiver-address-amount-section">
+              <div class="pages_maincontent">
+                  <div class="page_content">
+                      <section class="margin-50" style="margin-top: 40px;">
+                              <div class="loginform">
+                                  <div class="errorDiv" style="display: none;">
+                                        <div class="alert alert-danger">
+                                          <p style="text-align: center;" class="showError"></p>
+                                        </div>
+                                  </div>
+
+                                  <button class="recipient-address-scan-qr-code" style="font-size: 1.76rem;color: white!important;border-radius: 5px;width: 40%;font-weight: 400;height: 35px;background: linear-gradient(135deg,#232b47 0%,#232b47 100%);float: right;color: #FFF;">Scan Address</button>
+                                    <div class="clear"></div>
+
+                                  <form action="crypto/send/review" class="crypto-send-form" method="post">
+                                      <input type="hidden" name="senderAddress" class="sender-address">
+                                      <input type="hidden" name="cryptoCurrencyCode" class="crypto-currency-code">
+
+                                      <!-- Receiver Address -->
+                                      <label data-localize="cryptoSendRecipientAddressText"></label>
+                                      <!-- Warning Text - 1 -->
+                                      <input type="text" id="receiverAddress" name="receiverAddress" class="form_input require receiverAddress" data-role="none" onkeyup="this.value = this.value.replace(/\s/g, '')"/>
+                                      <span style="color: #6c757d!important;display: block;margin-top: .25rem;font-size: 115%;font-weight: 400;"><b>
+                                        *<span data-localize="cryptoSendRecipientAddressWarningTextD"></span>.</b></span>
+                                      <!-- Warning Text - 2 -->
+                                      <span style="color: #6c757d!important;display: block;margin-top: .25rem;font-size: 90%;font-weight: 400;"><b>*<span data-localize="cryptoSendRecipientAddressWarningTextA"></span>&nbsp;<span class="crypto-currency-code"></span>&nbsp;<span data-localize="cryptoSendRecipientAddressWarningTextB"></span></b>,&nbsp;<span data-localize="cryptoSendRecipientAddressWarningTextC"></span>.</span>
+
+                                      <br>
+
+                                      <!-- Amount -->
+                                      <label data-localize="sendMoneyAmntText"></label>
+                                      <input type="text" id="amount" name="amount" class="form_input require amount" placeholder="0.00000000" data-role="none" onkeyup="this.value = this.value.replace(/^\.|[^\d\.]/g, '')" / readonly>
+                                      <div id="keyboard">
+                                        <ol class="keys">
+                                           <li data-number='1'>1</li>
+                                           <li data-number='2'>2</li>
+                                           <li data-number='3'>3</li>
+                                           <li data-number='4'>4</li>
+                                           <li data-number='5'>5</li>
+                                           <li data-number='6'>6</li>
+                                           <li data-number='7'>7</li>
+                                           <li data-number='8'>8</li>
+                                           <li data-number='9'>9</li>
+                                           <li data-number='0'>0</li>
+                                          <li data-number='.'>.</li>
+                                          <li id="delete">X</li>
+                                        </ol>
+                                      </div>
+                                      <button type="submit" class="form_submit crypto-send-review customBorderRadius" data-redirect="crypto-send-review.html" data-role="none">
+                                          <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> <span data-localize="sendMoneyNextBtnText" class="crypto-send-review-text"></span>
+                                      </button>
+                                  </form>
+                              </div>
+                      </section>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Review -->
+          <div role="main" class="ui-content animate-right-to-center" id="crypto-send-review-section" style="display: none;">
+              <div class="pages_maincontent">
+                  <div class="page_content">
+                      <section class="margin-50" style="margin-top: 40px;">
+                          <div class="loginform">
+                              <div class="errorDiv">
+                                  <div class="alert alert-danger">
+                                    <p style="text-align: center;" class="showError"></p>
+                                  </div>
+                              </div>
+
+                              <div><p style="text-align: center;padding:5px;font-size: 14px;font-weight: bold;" class="crypto-send-receiver-address"></p></div>
+                              <h2 style="margin-top: 40px;font-size:14px"><span data-localize="cryptoSendAmntText"></span>&nbsp;&nbsp;&nbsp;<span class="crypto-send-amount" style="float: right;"></span></h2>
+                              <h2 style="margin-top: 0px;font-size:14px"><span data-localize="cryptoSendNetworkFeeText"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="crypto-send-network-fee" style="float: right;"></span></h2>
+                              <hr style="border: 1px solid #ddd">
+                              <h2 style="margin-top: 0px;font-size:14px"><span data-localize="sendMoneytotalAmntText"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="crypto-send-total" style="float: right;"></span></h2>
+                              <br/>
+
+                              <button type="button" action="crypto/send/confirm" class="form_submit crypto-send-confirm customBorderRadius" data-redirect="crypto-send-success.html" data-role="none">
+                                  <i class="fa fa-spinner fa-spin" style="display: none;"></i> <span data-localize="sendMoneyConfirmBtnText" class="crypto-send-confirm-text"></span>
+                              </button>
+                          </div>
+                      </section>
+                  </div>
+              </div>
+          </div>
+          <!-- /Review-->
+
+          <!-- /content -->
+          <aside>
+              <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                  <div class="user_login_info">
+                      <div class="user_thumb_container">
+                          <div class="user_thumb">
+                              <img class="image_src" src="images/author.png" alt="" title="" />
+                          </div>
+                      </div>
+                      <div class="user_details">
+                          <p class="username" style="color: #fff;"></p>
+                      </div>
+                      <nav class="user-nav" id="menuItem">
+                          <!--Load a dynamice html content for menu-->
+                      </nav>
+                  </div>
+                  <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+              </div>
+          </aside>
+          <!-- /panel -->
+      </div>
+      <!-- /page -->
+
+      <!--Javascript-->
+      <script type="text/javascript">
+
+        var senderWalletAddress = window.localStorage.getItem('sender-wallet-address');
+        var cryptoCurrencyCode = window.localStorage.getItem('crypto-currency-code');
+
+        var amount;
+        var receiverAddress;
+
+        /**
+         * Restrict currency rate upto 8 decimal places (as rate field in database is allowed upto 8 decimal places)
+         * @param  {event} event
+         * @return {string} value
+         */
+        function restrictNumberToEightdecimals(numStr)
+        {
+            let output;
+            if (numStr.length > 0 && !isNaN(numStr))
+            {
+              output = numStr.match(/^-?\d+(?:\.\d{0,8})?/)[0];
+              return $.trim(output);
+            }
+        }
+
+        //Set currency code and sender address
+        $(window).on('load', function()
+        {
+            if(networkState()=='none')
+            {
+                onOffline();
+                $(window).scrollTop(0);
+            }
+            else
+            {
+                onOnline();
+
+                // Insufficient Balance Check (This check will only happend if user clicks multiple times with low balance) / Demo site .env check - starts
+                var cryptoSendInsufficientBalanceError = window.localStorage.getItem('crypto-send-insufficient-balance-error');
+                var cryptoSendInsufficientBalanceErrorMessage = window.localStorage.getItem('crypto-send-insufficient-balance-error-message');
+                var cryptoSendDemoSiteError = window.localStorage.getItem('crypto-send-demo-site-error');
+                var cryptoSendDemoSiteErrorMessage = window.localStorage.getItem('crypto-send-demo-site-error-message');
+                if (cryptoSendInsufficientBalanceError != null && cryptoSendInsufficientBalanceErrorMessage != null)
+                {
+                    showErrorMessage(cryptoSendInsufficientBalanceErrorMessage);
+                    window.localStorage.removeItem('crypto-send-insufficient-balance-error');
+                    window.localStorage.removeItem('crypto-send-insufficient-balance-error-message');
+                }
+                else if (cryptoSendDemoSiteError != null && cryptoSendDemoSiteErrorMessage != null)
+                {
+                    showErrorMessage(cryptoSendDemoSiteErrorMessage);
+                    window.localStorage.removeItem('crypto-send-demo-site-error');
+                    window.localStorage.removeItem('crypto-send-demo-site-error-message');
+                }
+                // Insufficient Balance Check (This check will only happend if user clicks multiple times with low balance) / Demo site .env check - ends
+
+                // Set sender wallet address
+                $('.sender-address').val(senderWalletAddress);
+                // Set crypto currency code
+                $('.crypto-currency-code').html(cryptoCurrencyCode).val(cryptoCurrencyCode);
+                // Restrit Amount Decimal Places
+                $("#amount").val(function()
+                {
+                    let num = $('.keys').data('number');
+                    if (this.value != '') {
+                        return restrictNumberToEightdecimals((this.value + num));
+                    }
+                });
+                // Show crypto currency warning texts
+                showCryptoSendWarningTexts(cryptoCurrencyCode);
+            }
+        });
+
+        $('.keys').on('click', 'li', function()
+        {
+            var num = $(this).data('number')
+            $("#amount").val(function()
+            {
+                return restrictNumberToEightdecimals((this.value + num));
+            });
+            $('#amount').valid();
+        });
+
+        $('#delete').click(function()
+        {
+            var text = $('#amount').val();
+            var backSpace = text.substr(0, text.length - 1);
+            $('#amount').val(backSpace);
+            $('#amount').valid();
+            return false;
+        });
+
+        // Crypto Send Form / Crypto Send Review
+        $('.crypto-send-form').validate({
+            rules: {
+                receiverAddress:
+                {
+                    required: true
+                },
+                amount:
+                {
+                    required: true,
+                    number: true
+                }
+            },
+            submitHandler: function (form,e)
+            {
+                e.preventDefault();
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    let endPoint = $('form').attr('action');
+                    let data     = $('form').serialize();
+                    cryptoSendReview(cryptoCurrencyCode, $('#amount').val(), endPoint,'POST',data);
+                }
+            }
+        });
+
+        //recipient-address-scan-qr-code
+        $(document).on('click', '.recipient-address-scan-qr-code', function(e)
+        {
+            e.preventDefault();
+            var recipentAddressField = $("#receiverAddress");
+            recipientAddressQrCodeScanner(recipentAddressField);
+        });
+
+        // Crypto Send Confirm
+        $(document).on('click', '.crypto-send-confirm', function(e)
+        {
+            e.preventDefault();
+
+            // Spinner class added for crypto-send-confirm confirm btn
+            $('.fa-spin').addClass('spinner');
+
+            cryptoSendConfirm();
+        });
+
+      </script>
+  </body>
+</html>

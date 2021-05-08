@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <style type="text/css">
+            .loginform {
+                width: 90%;
+                padding: 0 15px 15px 5%;
+                background: #fff;
+            }
+            .image_srcs {
+                width: 65px;
+                height: 65px;
+                border-radius: 50%;
+                border: 1px solid #f0f0f0 !important;
+            }
+            .centerImg {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+            .succesPage{
+                background:#232b47;
+                /*width: 94.7%;*/
+                color: #fff;
+                padding: 42px;
+                font-size: 20px;
+                font-weight: bold;
+            }
+            .center {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                width: 25%;
+                /*border-radius: 50px;*/
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div data-role="page" id="features" class="secondarypage" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button"><a href="#"><img style="display: none" src="images/icons/left-arrow.png" alt="" title="" /></a></div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:16px" data-localize="sendMoneySuccessTitleText"></h2>
+                        </div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <!-- Internet Connection Message Div -->
+                <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span></span>
+                </div>
+            </header>
+            <!-- /header -->
+            <div role="main" class="ui-content animate-right-to-left">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section class="margin-50" style="margin-top: 20px;">
+
+                            <div class="successform" style="width: 90%;padding: 0 15px 15px 5%;background: #fff;">
+
+                                <img class="center" src="images/icons/success.png" alt="" title="" />
+
+                                <h2 style="text-align: center;font-size:14px;color: #41AD49" data-localize="sendMoneySuccessStatus"></h2>
+
+                                <h2 style="text-align: center;font-size:14px" data-localize="sendMoneySuccessStatusText" id="sendMoneySuccessStatusText"></h2>
+                                <h2 style="text-align: center;font-size:14px" data-localize="sendMoneySuccessStatusTextWithMailError" id="sendMoneySuccessStatusTextWithMailError"></h2>
+
+                                <img class="centerImg image_srcs" style="text-align: center;"/>
+
+                                <h4 style="text-align: center;"><strong><span class="receiver"></span></strong></h4>
+
+                                <h5 style="text-align: center;"><span data-localize="sendMoneySuccessTransferredAmountText"></span><span class="finalAmnt"></span></h5>
+
+                                <button type="submit" name="submit" class="form_submit sendMoneyPaySuccess customBorderRadius" data-redirect="profile.html" id="submit" data-role="none" style="color: #232b47;background-color: #ddd">
+                                    <span data-localize="sendMoneySuccessOkText"></span>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+            <!-- /content -->
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <script type="text/javascript">
+
+            $(window).on('load', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    let sendingCurrencySymbol = window.localStorage.getItem('sendingCurrencySymbol');
+                    let sendingAmount = window.localStorage.getItem('sendingAmount');
+                    let sendMoneyMailErrorMessage = window.localStorage.getItem('sendMoneyMailErrorMessage');
+                    // console.log(sendMoneyMailErrorMessage)
+                    // console.log(typeof sendMoneyMailErrorMessage)
+                    // console.log(sendMoneyMailErrorMessage != null)
+                    if(sendingAmount != null)
+                    {
+                        $(".finalAmnt").text(getMoneyFormat(sendingCurrencySymbol, getDecimalNumberFormat(sendingAmount)));
+                        if (sendMoneyMailErrorMessage != null)
+                        {
+                            $("#sendMoneySuccessStatusTextWithMailError").show();
+                            $("#sendMoneySuccessStatusText").hide();
+                        }
+                        else
+                        {
+                            $("#sendMoneySuccessStatusText").show();
+                            $("#sendMoneySuccessStatusTextWithMailError").hide();
+                        }
+                        getSendMoneyReceiverDetails();
+                    }
+                    else
+                    {
+                        window.location.replace('profile.html');
+                    }
+                }
+            });
+
+            // var sendMoneySuccess =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // sendMoneySuccess.initialize();
+
+            function getSendMoneyReceiverDetails()
+            {
+                $.ajax(
+                {
+                    url : request_url('get-user-specific-details'),
+                    type : "get",
+                    data : {
+                        'type':'sendMoney',
+                        'tr_ref_id': window.localStorage.getItem('tr_ref_id'),
+                    },
+                    dataType : 'json',
+                    beforeSend: function(xhr)
+                    {
+                        xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET');
+                        xhr.setRequestHeader('Authorization-Token', `${window.localStorage.getItem('token')}`);
+                    },
+                })
+                .done(function(data)
+                {
+                    // console.log(data.success.user);
+                    if(data.success.status==200)
+                    {
+                        // console.log(data.success.receiver);
+
+                        let email  = data.success.receiver.email;
+                        let phone  = data.success.receiver.phone;
+                        let picture  = data.success.receiver.picture;
+                        let first_name  = data.success.receiver.first_name;
+                        let last_name  = data.success.receiver.last_name;
+
+                        if(first_name && last_name)
+                        {
+                            let username  = first_name+' '+last_name;
+                            $('.receiver').text(username);
+
+                        }
+                        else
+                        {
+                            //Show email or phone
+                            if (email != null) {
+                                $('.receiver').text(email);
+                            }
+                            else if (phone != null){
+                                $('.receiver').text(phone);
+                            }
+                        }
+
+                        if (picture)
+                        {
+                            let srcs       = SITE_URL.replace('api/','')+'public/user_dashboard/profile/'+picture;
+                            $('.image_srcs').attr('src',srcs);
+                        }
+                        else
+                        {
+                            let srcs = SITE_URL.replace('api/', '') + 'public/user_dashboard/images/avatar.jpg';
+                            $('.image_srcs').attr('src',srcs);
+                        }
+                    }
+                })
+                .fail(function(error)
+                {
+                    console.log(error);
+                });
+            }
+
+            // Send Money Success
+            $(document).on('click', '.sendMoneyPaySuccess', function(e)
+            {
+                e.preventDefault();
+
+                window.localStorage.removeItem('tr_ref_id');
+                window.localStorage.removeItem('sendingEmailOrPhone');
+                window.localStorage.removeItem('sendingAmount');
+                window.localStorage.removeItem('sendingCurrency');
+                window.localStorage.removeItem('sendingCurrencySymbol');
+                window.localStorage.removeItem('sendingFees');
+
+                if (window.localStorage.getItem('sendMoneyMailErrorMessage') != null) {
+                     window.localStorage.removeItem('sendMoneyMailErrorMessage');
+                }
+
+                window.location.replace('profile.html');
+            });
+        </script>
+    </body>
+</html>

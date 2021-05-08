@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/modules/accept-request-money.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div class="loader" style="display: none;"></div>
+        <div data-role="page" id="features" class="secondarypage" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button"><a href="#" onclick="window.history.back();"><img src="images/icons/left-arrow.png" alt="" title="" /></a></div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:13px" data-localize="transactionDetailsAcceptRequestTitleText"></h2></div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <!-- Internet Connection Message Div -->
+                <div align="center" class="no_internet_div" id="NoInternetDiv" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span>
+                    </span>
+                </div>
+                <!-- Check User Suspended -->
+                <div class="userSuspendedDiv" style="display: none;text-align: center;font-weight: bold;">
+                    <div class="alert alert-danger">
+                        <i class="fa fa-flag"></i> <strong style="font-size: 24px;"><span data-localize="suspendedText"></span></strong>
+                      <hr>
+                      <p class="showUserSuspendedError"></p>
+                    </div>
+                </div>
+                <!-- Check Request Creator Inactive/Suspended - On Accept-->
+                <div class="req-creator-status-div" style="display: none;text-align: center;font-weight: bold;">
+                    <div class="alert alert-danger">
+                      <i class="fa fa-flag"></i> <strong style="font-size: 24px;" class="req-creator-status-text"></strong>
+                      <hr>
+                      <p class="req-creator-status-error-text"></p>
+                    </div>
+                </div>
+            </header>
+            <!-- /header -->
+
+            <div role="main" class="ui-content animate-bottom myDiv" style="display: block;">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+
+                        <section class="margin-50" style="margin-top: 150px;">
+                                <div class="Divs">
+                                    <p class="requestMoney" style="color: green;text-align: center;font-size: 14px;font-weight: bold;margin-bottom: 40px;"></p>
+                                </div>
+                                <div class="loginform">
+                                      <div class="errorDiv" style="display: none;">
+                                            <div class="alert alert-danger">
+                                              <p style="text-align: center;" class="showError"></p>
+                                            </div>
+                                      </div>
+
+                                    <form class="emailForm">
+                                        <input type="text" name="email" value="" readonly id="email" class="form_input require acceptEmail" placeholder="Please enter email" data-role="none" disabled="disabled" />
+
+                                        <button type="submit" name="submit" action="request-payment-confirm" class="form_submit requestPaymentNext customBorderRadius" data-redirect="request-payment-confirm.html" id="submit" data-role="none">
+                                            <span data-localize="sendMoneyNextBtnText"></span>
+                                        </button>
+                                    </form>
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <!--Javascript-->
+        <script type="text/javascript">
+
+            //Get Reqeuested Email Address for request payment
+            $(window).on('load',function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    if (window.localStorage.getItem('transaction-user-status') == 'Suspended')
+                    {
+                        $('.req-creator-status-div').show();
+                        $('.req-creator-status-text').text((window.localStorage.getItem('language') == 'fr') ?
+                        'Suspendu!' : 'Suspended!');
+                        $('.req-creator-status-error-text').text((window.localStorage.getItem('language') == 'fr') ?
+                        'Le créateur de la demande est suspendu!' : 'Request Creator is suspended!');
+                        $('.ui-content').hide();
+                        $(window).scrollTop(0);
+                    }
+                    else if(window.localStorage.getItem('transaction-user-status') == 'Inactive')
+                    {
+                        $('.req-creator-status-div').show();
+                        $('.req-creator-status-text').text((window.localStorage.getItem('language') == 'fr') ?
+                        'Inactif!' : 'Inactive!');
+                        $('.req-creator-status-error-text').text((window.localStorage.getItem('language') == 'fr') ?
+                        'Le créateur de la demande est inactif!' : 'Request Creator is inactive!');
+                        $('.ui-content').hide();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        //
+                        let requestAccptValidationErrorMessage = localStorage.getItem('requestAccptValidationErrorMessage');
+                        if (requestAccptValidationErrorMessage != null) {
+                            showErrorMessage(requestAccptValidationErrorMessage);
+                            window.localStorage.removeItem('requestAccptValidationErrorMessage');
+                        }
+                        accetRequestEmailOrPhone();
+                    }
+                }
+            });
+
+            //Get Reqeuested Email Address for request payment
+            // var accetRequestMoney =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // accetRequestMoney.initialize();
+
+            //on click requestPaymentNext
+            $(document).on('click', '.requestPaymentNext', function()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    //
+                    window.location.href = 'request-payment-confirm.html';
+                }
+            });
+        </script>
+    </body>
+</html>

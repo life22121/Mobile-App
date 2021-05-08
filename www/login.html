@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css Starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <!--Css Ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/show-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/hide-spinner.js"></script>
+        <script defer type="text/javascript" src="js/common/show-success-message.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/modules/login.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div data-role="page" id="login" class="secondarypage" data-theme="b" style="display: block;">
+            <div role="main" class="ui-content animate-right-to-center profileDiv" style="display: block;">
+                <div class="content-block-login">
+                    <!-- Internet Connection Message Div -->
+                    <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                        <span></span>
+                    </div>
+                    <div class="form_logo" data-localize="loginHeadingText">LOGIN</div>
+
+                    <div class="loginform">
+        				  <div class="successDiv" style="display: none;">
+            					<div class="alert alert-success">
+            					  <p class="showSuccess"></p>
+            					</div>
+        				  </div>
+        				  <div class="errorDiv" style="display: none;">
+        						<div class="alert alert-danger">
+        						  <p class="showError"></p>
+        						</div>
+        				  </div>
+                        <form id="LoginForm" class="login" action="login" data-redirect="profile.html" method="post">
+
+                            <input type="text" name="email" value="" id="email" class="form_input require" data-role="none" />
+                            <input data-placeholder="loginPassPlaceholder" type="password" name="password" id="password" value="" class="form_input require" placeholder="Please enter your password" data-role="none" />
+
+                            <select name="language" id="language" required="true">
+                                <option value="en">English</option>
+                                <option value="fr">Français</option>
+                            </select>
+
+                            <button type="submit" class="form_submit signIn customBorderRadius" id="signIn" data-role="none" value="Sign In"></button>
+                            <button data-localize="signuptext" type="button" class="sign_up form_submit signUp customBorderRadius" id="signUp" data-role="none" value="Sign Up">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+        </div>
+        <!-- /page -->
+
+        <script type="text/javascript">
+
+            $(window).on('load', function()
+            {
+                // console.log('window loaded')
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+
+                    $('.signIn').text((window.localStorage.getItem('language') == 'fr') ? 'Se connecter' : 'Sign In');
+                    $('.signUp').text((window.localStorage.getItem('language') == 'fr') ? 'S\'inscrire' : 'Sign Up');
+
+                    HideErrorMsgAndDisplaySuccessMessageErrorIfAnyElseHideIt();
+
+                    //this is needed for setting language again, after logout
+
+                    //Set Language on load based on local storage lang value
+                    $('#language').val(window.localStorage.getItem('language'));
+                    $('#language-button span').text((window.localStorage.getItem('language') == 'fr') ? 'Français' : 'English');
+                    checkSystemLoginVia(null);
+                }
+            });
+
+            // var login =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // login.initialize();
+
+            $(document).on('change', '#language', function () {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    changelanguage($('#language').val());
+                }
+            });
+
+            $(document).on('click', '.signUp', function ()
+            {
+                if(networkState()=='none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    signUp();
+                }
+            })
+
+            $('#LoginForm').validate({
+                ignore: ":hidden",
+                rules: {
+                    email: {
+                        required: true, //no email true or no number true, as user can login via both email and phone -
+                        //no client-side validation witll be there - facebook style - if email set via loginvai but enters
+                        //phone, then server will throw error
+                    },
+                    language: {
+                        required: true
+                    },
+                    password: {
+                        required: true
+                    },
+                },
+                submitHandler: function (form,e)
+                {
+                    e.preventDefault();
+
+                    if(networkState()=='none')
+                    {
+                        onOffline();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        onOnline();
+                        $('.signIn').text('');
+                        //
+                        let url      = $('form').attr('action');
+                        let redirect = $('form').attr('data-redirect');
+                        let data     = $('form').serialize();
+                        performLoginRequest(url,'POST',data,redirect);
+                    }
+                }
+            });
+
+        </script>
+    </body>
+</html>

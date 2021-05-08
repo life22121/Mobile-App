@@ -1,0 +1,335 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <style type="text/css">
+            .loader {
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                z-index: 9999999999;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #232b47;
+                width: 100px;
+                height: 100px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+            .ui-page-theme-b .ui-btn {
+                background-color: #fff !important;
+                border-color: transparent !important;
+                color: #000 !important;
+                text-shadow: none;
+                font-size: 20px;
+                padding: 5px;
+                border-radius: 0px;
+            }
+            .error {
+                color: red !important;
+                font-size: 14px;
+                font-weight: 800;
+            }
+            @-webkit-keyframes spin {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-next.js"></script>
+        <script defer type="text/javascript" src="js/common/money-currency-decimal-position.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/modules/deposit-money.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <body>
+        <div class="loader" style="display: block;"></div>
+        <div data-role="page" id="features" class="secondarypage pageDiv" data-theme="b" style="display: none;">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button">
+                            <a href="#" onclick="backToDeposit()" data-nav-title="" data-nav-to="">
+                                <img src="images/icons/left-arrow.png" alt="" title="" />
+                            </a>
+                    </div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:16px" data-localize="depositText"></h2></div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <!-- Internet Connection Message Div -->
+                <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span></span>
+                </div>
+            </header>
+            <!-- /header -->
+
+            <!-- Deposit Confirm Page For Stripe -->
+            <div role="main" class="ui-content animate-right-to-center" id="depositPaypalReviewSection">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <section class="margin-50" style="margin-top: 40px;">
+                            <div class="loginform loginFrom2">
+                                <h2 style="font-size: 14px">
+                                    <p style="font-size:14px;padding:5px;text-align: center;"><span data-localize="depositConfirmSubHeaderText"></span></p>
+                                </h2>
+                                <div>
+                                    <span id="payment_method_logo"></span>
+                                </div>
+                                <br>
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="depositConfirmAmount"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dcurrencyAmount" style="float: right;"></span></h2>
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="sendMoneyfeeText"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalFees" style="float: right;"></span></h2>
+                                <hr style="border: 1px solid #ddd">
+                                <h2 style="margin-top: 7px;font-size:14px"><span data-localize="sendMoneytotalAmntText"></span>&nbsp;&nbsp;&nbsp;<span class="totalAmount" style="float: right;"></span></h2>
+                            </div>
+                            <br>
+                            <div id="output">
+                                <script id="map" type="text/javascript" src=""></script>
+                            </div>
+                            <div id="paypal-button-container" style="text-align: center;"></div>
+                            <!-- Show paypal Error Message -->
+                            <div class="paypalErrorDiv" style="display: none;">
+                                <div class="alert alert-danger">
+                                    <!-- <p style="text-align: center;" class="showError" data-localize="paypalError"></p> -->
+                                    <p style="text-align: center;" class="showError">Paypal Credentials are Incorrect</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /content -->
+
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <!--Javascript-->
+        <script type="text/javascript">
+
+            $(window).on('load', function()
+            {
+                //Timer for loader
+                setTimeout(function(){
+                    $('.loader').css('display', 'none'); //needed as paypal js gets delayed in phone
+                    $('.pageDiv').css('display', 'block'); //needed as paypal js gets delayed in phone
+                }, 3000);
+
+                $("#payment_method_logo").html(`<img class="" src="${SITE_URL.replace('api/','')}/public/images/payment_gateway/paypal.jpg" class="img-responsive" style="max-width: 130px; margin:auto" />`);
+                $('.paymentmethodName').text(window.localStorage.getItem('deposit_payment_name'));
+                $('.totalFees').text(getMoneyFormat(window.localStorage.getItem('depositCurrencySymbol'), getDecimalNumberFormat(window.localStorage.getItem('depositFees'))));
+                $('.dcurrencyAmount').text(getMoneyFormat(window.localStorage.getItem('depositCurrencySymbol'), getDecimalNumberFormat(window.localStorage.getItem('depositAmount'))));
+                $('.totalAmount').text(getMoneyFormat(window.localStorage.getItem('depositCurrencySymbol'), getDecimalNumberFormat(window.localStorage.getItem('totalAmount'))));
+
+                var url = "https://www.paypal.com/sdk/js?client-id="+window.localStorage.getItem('clientID')+"&currency="+window.localStorage.getItem('depositCurrencyCode')+"&disable-funding=card,credit";
+                loadScript(url, function ()
+                {
+                        // $('.pageDiv').css('display', 'block'); //needed as paypal js gets delayed in phone
+
+                        //start Paypal
+                        paypal.Buttons({
+                        createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: parseFloat(window.localStorage.getItem('totalAmount')).toFixed(2),
+                                }
+                            }]
+                        });
+                        },
+                        onApprove: function(data, actions) {
+                            $('.pageDiv').css('display', 'none');
+                            $('.loader').css('display', 'block'); //show loader
+                            return actions.order.capture().then(function(details) {
+                                if (networkState() == 'none')
+                                {
+                                    onOffline();
+                                    $(window).scrollTop(0);
+                                }
+                                else
+                                {
+                                    onOnline();
+                                    //create Deposit
+                                    sendToServer(details);
+                                }
+                            });
+                        }
+                    }).render('#paypal-button-container');
+                    //end paypal
+                });
+            });
+
+            // var depositMoneyConfirmPaypal =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // depositMoneyConfirmPaypal.initialize();
+
+            /* Dynamic Script Loading Starts */
+            //As paypal smart button requires client id when loading
+            //So set client id dynamically
+            function loadScript(url, callback)
+            {
+                var script = document.createElement("script")
+                script.type = "text/javascript";
+                script.defer = true;
+
+                if (script.readyState) { //IE
+                    script.onreadystatechange = function () {
+                        if (script.readyState == "loaded" || script.readyState == "complete") {
+                            script.onreadystatechange = null;
+                            callback();
+                        }
+                    };
+                } else { //Others
+                    script.onload = function () {
+                        callback();
+                    };
+                }
+                script.src = url;
+                document.getElementsByTagName("head")[0].appendChild(script);
+            }
+            /* Dynamic Script Loading Ends */
+
+            //call to server starts
+            function sendToServer(details)
+            {
+                $.ajax(
+                {
+                    url: request_url('deposit/paypal-payment-store'),
+                    type: "post",
+                    dataType:'json',
+                    data: {
+                      'currencyID': window.localStorage.getItem('depositCurrencyId'),
+                      'methodID': window.localStorage.getItem('deposit_payment_id'),
+                      // 'amount': parseFloat(window.localStorage.getItem('depositAmount')).toFixed(2), //for 8 decimal places
+                      'amount': parseFloat(window.localStorage.getItem('depositAmount')), //for 8 decimal places
+                      'userId': window.localStorage.getItem('user_id'),
+                      'details': details
+                    },
+                    beforeSend: function(xhr)
+                    {
+                        xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
+                        xhr.setRequestHeader('Authorization-Token', `${window.localStorage.getItem('token')}`);
+                    },
+                })
+                .done(function(data)
+                {
+                    if (data.success.status == 200) {
+                        window.location.href = 'deposit-money-success.html';
+                    }
+                    else
+                    {
+                        console.log(data.success.message);
+                        return false;
+                    }
+                })
+                .fail(function(error)
+                {
+                    console.log(error);
+                });
+            }
+            //call to server ends
+
+            $(document).ajaxStop(function ()
+            {
+                setTimeout(function()
+                {
+                    let flag = false;
+
+                    // console.log(typeof paypal)
+                    // console.log($.makeArray(paypal)[0])
+
+                    // let paypalArr = $.makeArray(paypal)[0];
+
+                    if  (typeof paypal == "undefined")
+                    // if  (paypalArr.length === 0)
+                    {
+                        flag = true;
+                        checkPayPalObject(flag)
+                    }
+                    else
+                    {
+                        $('.paypalErrorDiv').css('display', 'none');
+                    }
+                }, 3000);
+                $('.loader').css('display', 'none'); //needed as paypal js gets delayed in phone
+                $('.pageDiv').css('display', 'block'); //needed as paypal js gets delayed in phone
+            });
+
+            function checkPayPalObject(flag) {
+                if (flag) {
+                    $('.paypalErrorDiv').css('display', 'block');
+                }
+                flag = false;
+            }
+
+        </script>
+    </body>
+</html>

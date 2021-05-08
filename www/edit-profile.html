@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+
+        <!--Css style starts here-->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.css">
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link type="text/css" rel="stylesheet" href="css/colors/color.css" />
+        <link type="text/css" rel="stylesheet" href="plugins/intl-tel-input-13.0.0/build/css/intlTelInput.css" />
+        <style type="text/css">
+            .ui-page-theme-b .ui-btn {
+                background-color: #fff !important;
+                border-color: transparent !important;
+                color: #000 !important;
+                text-shadow: none;
+                font-size: 20px;
+                padding: 5px;
+                border-radius: 0px;
+            }
+        </style>
+        <!--Css style ends here-->
+
+        <!--Javascript Library Starts here-->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="plugins/intl-tel-input-13.0.0/build/js/intlTelInput.js" charset="utf-8"></script>
+        <script type="text/javascript" src="js/pullToRefresh.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common/translate.js"></script>
+        <script type="text/javascript" src="js/common/language.js"></script>
+        <script type="text/javascript" src="js/common/app.js"></script>
+        <script defer type="text/javascript" src="js/common/check-token.js"></script>
+        <script defer type="text/javascript" src="js/common/navigate-to-back.js"></script>
+        <script defer type="text/javascript" src="js/common/show-success-message.js"></script>
+        <script defer type="text/javascript" src="js/common/show-error-message.js"></script>
+        <script defer type="text/javascript" src="js/modules/edit-profile.js"></script>
+        <!--Javascript Library Ends here-->
+    </head>
+
+    <!-- <body onload="showLoader();"> -->
+    <body>
+       <!-- <div class="loader"></div> -->
+        <div data-role="page" id="features" class="secondarypage" data-theme="b">
+            <header>
+                <div data-role="header" data-position="fixed">
+                    <div class="nav_left_button">
+                            <a href="#" onclick="backNavigateTo(event)" data-nav-title="" data-nav-to="">
+                                <img src="images/icons/left-arrow.png" alt="" title="" />
+                            </a>
+                    </div>
+                    <div class="nav_center_logo">
+                        <div class="p-title">
+                            <h2 style="font-size:16px" data-localize="updateProfileHeaderText"></h2>
+                        </div>
+                    </div>
+                    <div class="nav_right_button">
+                        <a href="#right-panel"><img src="images/icons/icons8-align-justify-80.png" alt="" title="" /></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                 <!-- Internet Connection Message Div -->
+                <div align="center" id="NoInternetDiv" class="no_internet_div" style="color: green;font-size: 12px;font-family: 'Comic Sans MS', cursive, sans-serif;">
+                    <span></span>
+                </div>
+            </header>
+
+            <div role="main" class="ui-content animate-right-to-center profileDiv">
+                <div class="pages_maincontent">
+                    <div class="page_content">
+                        <div class="dboard-profile">
+                            <div class="center" style="margin-top: 10px;">
+                                <a href="#" class="editProfile" data-transition="slidefade">
+                                    <img style="border-radius: 50%;width: 98px;height: 98px; margin: auto;" class="image_src" id="profileImage" src="images/author.png" alt="" title="" />
+                                </a>
+                            </div>
+                        </div>
+                        <section class="margin-50" style="margin-top: 10px;">
+                                <div class="loginform">
+
+                                    <div class="successDiv" style="display: none">
+                                        <div class="alert alert-success">
+                                            <p class="showSuccess"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="errorDiv" style="display: none">
+                                        <div class="alert alert-danger">
+                                            <p class="showError"></p>
+                                        </div>
+                                    </div>
+
+                                    <form id="updateProfile" class="emailForm" action="update-user-profile" method="post" style="margin-top:32px">
+                                        <!--hidden-->
+                                        <input type="hidden" name="user_defaultCountry" id="user_defaultCountry">
+                                        <input type="hidden" name="user_carrierCode" id="user_carrierCode">
+                                        <input type="hidden" name="formattedPhone" id="formattedPhone">
+                                        <!--/hidden-->
+
+                                        <label data-localize="first_name"></label>
+                                        <input data-placeholder="firstnamePlaceholder" type="text" name="first_name" value="" id="first_name" class="form_input require first_name" placeholder="Please enter firstname" data-role="none" />
+
+                                        <label data-localize="last_name"></label>
+                                        <input data-placeholder="lastnamePlaceholder" type="text" name="last_name" value="" id="last_name" class="form_input require last_name" placeholder="Please enter lastname" data-role="none" />
+
+                                        <label data-localize="email"></label>
+                                        <input data-placeholder="emailPlaceholder" type="text" name="email" value="" id="email" class="form_input require email" placeholder="Please enter email"
+                                        data-role="none" readonly />
+                                        <span id="email-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+                                        <!-- Phone -->
+                                        <label data-localize="loginPhoneText">Phone</label>
+                                        <input type="tel" name="phone" id="phone" class="require phone" style="border:none !important;padding-left: 100px"/>
+                                        <span id="tel-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+                                        <span id="phone-validation-error" style="padding: 0 0 10px 0;width: 100%;text-align: left;font-size: 14px;color: red;font-weight: bold;"></span>
+
+                                        <label data-localize="updateProfileAddressText"></label>
+                                        <input data-placeholder="updateProfileAddressPlaceholder" type="text" name="address" value="" id="address" class="form_input require address" placeholder="Please enter address" data-role="none" />
+
+                                        <label data-localize="updateProfileCityText"></label>
+                                        <input data-placeholder="updateProfileCityPlaceholder" type="text" name="city" value="" id="city" class="form_input require city" placeholder="Please enter city" data-role="none" />
+
+                                        <label data-localize="updateProfileStateText"></label>
+                                        <input data-placeholder="updateProfileStatePlaceholder" type="text" name="state" value="" id="state" class="form_input require state" placeholder="Please enter state" data-role="none" />
+
+                                        <label data-localize="updateProfileDefaultWalletText"></label>
+                                        <select name="defaultWallet" id="defaultWallet" required="true">
+                                            <!-- <option value="">Choose one</option> -->
+                                        </select>
+
+                                        <label data-localize="updateProfileCountryText"></label>
+                                        <select data-placeholder="updateProfileStatePlaceholder" name="country" id="country" required="true">
+                                            <!-- <option value="">Choose one</option> -->
+                                        </select>
+
+                                        <label data-localize="updateProfileTimeZoneText"></label>
+                                        <select name="timezone" id="timezone" required="true">
+                                            <!-- <option value="">Choose one</option> -->
+                                        </select>
+                                        
+                                        <label data-localize="change-profile-picture"></label>
+                                        <input type="file" name="file" id="file" data-rel="">
+
+                                        <!-- <input type="submit" name="submit" class="form_submit customBorderRadius" data-role="none" value="Update Profile" id="updateProfileSubmit" /> -->
+                                        <button data-localize="updateProfileSubmitButtonText" type="submit" name="submit" class="form_submit customBorderRadius" data-role="none" value="Update Profile" id="updateProfileSubmit">
+                                        </button>
+                                    </form>
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- /content -->
+
+            <aside>
+                <div data-role="panel" id="right-panel" data-display="reveal" data-position="right">
+                    <div class="user_login_info">
+                        <div class="user_thumb_container">
+                            <div class="user_thumb">
+                                <img class="image_src" src="images/author.png" alt="" title="" />
+                            </div>
+                        </div>
+                        <div class="user_details">
+                            <p class="username" style="color: #fff;"></p>
+                        </div>
+                        <nav class="user-nav" id="menuItem">
+                            <!--Load a dynamice html content for menu-->
+                        </nav>
+                    </div>
+                    <div class="close_loginpopup_button"><a href="#" data-rel="close"><img src="images/icons/black/menu_close.png" alt="" title="" /></a></div>
+                </div>
+            </aside>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
+
+        <!--Javascript Library Ends here-->
+        <script type="text/javascript">
+
+            // document.addEventListener("deviceready", allProfileData, false);
+
+            $(window).on('load', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    invokeIntelInputPluginOnUserEdit();
+                    showProfileDetails();
+                }
+            });
+
+            // var editProfile =
+            // {
+            //     initialize: function()
+            //     {
+            //         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+            //     },
+            //     onDeviceReady: function()
+            //     {
+            //         this.receivedEvent('deviceready');
+            //     },
+            //     receivedEvent: function()
+            //     {}
+            // };
+            // editProfile.initialize();
+
+            //Duplicate Phone Number Validation
+            $(document).on('blur', '#phone', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    formattedPhone();
+                    var phone = $(this).val().replace(/-|\s/g,""); //replaces 'whitespaces', 'hyphens'
+                    var phone = $(this).val().replace(/^0+/,"");  //replaces (leading zero - for BD phone number)
+                    var pluginCarrierCode = $(this).intlTelInput('getSelectedCountryData').dialCode;
+                    checkInvalidAndDuplicatePhoneNumberOnUserEdit(phone, pluginCarrierCode);
+                }
+            });
+
+            //Duplicate Email Validation
+            $(document).on('blur', '#email', function()
+            {
+                if (networkState() == 'none')
+                {
+                    onOffline();
+                    $(window).scrollTop(0);
+                }
+                else
+                {
+                    onOnline();
+                    duplicateEmailCheckUser($(this).val())
+                }
+            });
+
+            $("#file").change(function ()
+            {
+                var myForm = document.getElementById('updateProfile');
+                var form_data = new FormData(myForm);
+                form_data.append('_token', localStorage.getItem('token'));
+                form_data.append('user_id', localStorage.getItem('user_id'));
+                var file = $('#file').prop('files')[0];
+                form_data.append('file', file);
+
+                $.ajax({
+                    url: request_url('profile-image-upload'),
+                    type: "post",
+                    cache: false,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
+                        xhr.setRequestHeader('Authorization-Token', `${window.localStorage.getItem('token')}`);
+                        $('.pageDiv').css('display', 'none');
+                        $('.loader').css('display', 'block');
+                    },
+                }).done(function (data) {
+                    $('.pageDiv').css('display', 'block');
+                    $('.loader').css('display', 'none');
+                    console.log(data);
+                    if (data.success.status == 200) {
+
+                        if (data.filename) {
+                            let src = SITE_URL.replace('api/', '') + 'public/user_dashboard/profile/' + data
+                                .filename;
+                            $('#profileImage').attr('src', src);
+                            window.localStorage.setItem('picture', data.filename);
+                            var successMesage = (window.localStorage.getItem('language') == 'fr') ? 'Image téléchargée avec succès!' : data.success.message;;
+                            showSuccessMessage(successMesage);
+                            $(window).scrollTop(0);
+                        } else {
+                            unexpectedError(data);
+                        }
+
+                    } else {
+                        unexpectedError(data);
+                    }
+                }).fail(function (error) {
+                    console.log(error);
+                });
+            });
+
+            //Update Profile
+            $('#updateProfile').validate({
+                rules: {
+                    first_name: {
+                        required: true
+                    },
+                    last_name:{
+                        required: true
+                    },
+                    email:{
+                        required: true
+                    },
+                    // phone:{
+                    //     required:true
+                    // }
+                },
+                errorPlacement: function (error, element)
+                {
+                    if (element.attr('name') === 'phone') {
+                        error.appendTo('#phone-validation-error');
+                    }
+                    else
+                    {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function ()
+                {
+                    if (networkState() == 'none')
+                    {
+                        onOffline();
+                        $(window).scrollTop(0);
+                    }
+                    else
+                    {
+                        onOnline();
+                        let requestUrl = $('form').attr('action');
+                        let data = $('form').serialize();
+                        let token = localStorage.getItem('token');
+                        updateProfile(requestUrl,data,token);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
